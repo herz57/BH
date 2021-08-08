@@ -9,7 +9,8 @@ create table [Domains]
 create table Machines 
 (
 	MachineId int primary key identity,
-	[DomainType] int references [Domains]([DomainType]) not null
+	[DomainType] int references [Domains]([DomainType]) not null,
+	IsLocked bit
 );
 
 create table Tickets
