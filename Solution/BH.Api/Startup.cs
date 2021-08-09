@@ -28,6 +28,16 @@ namespace Api
             services.AddDbContext<BhDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BH")));
             services.AddTransient<ITicketsService, TicketsService>();
             services.AddTransient<ITicketsRepository, TicketsRepository>();
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                    });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -46,6 +56,8 @@ namespace Api
             //app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors();
 
             //app.UseAuthorization();
 

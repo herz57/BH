@@ -1,4 +1,4 @@
-﻿using Domain.Enums;
+﻿using BH.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

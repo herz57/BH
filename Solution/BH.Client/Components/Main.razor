@@ -1,0 +1,33 @@
+﻿@page "/main"
+
+<h1>Main</h1>
+
+@if (ticket == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Win</th>
+                <th>TicketId</th>
+                <th>MachineId</th>
+                <th>Cost</th>
+                <th>PlayedOut</th>
+                <th>Symbols</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@ticket.Win</td>
+                <td>@ticket.TicketId</td>
+                <td>@ticket.MachineId</td>
+                <td>@ticket.Cost</td>
+                <td>@ticket.PlayedOut</td>
+                <td>@ticket.Symbols</td>
+            </tr>
+        </tbody>
+    </table>
+}

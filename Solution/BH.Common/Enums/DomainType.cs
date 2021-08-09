@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Enums
+namespace BH.Common.Enums
 {
     public enum DomainType
     {

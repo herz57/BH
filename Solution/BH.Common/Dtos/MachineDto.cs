@@ -1,11 +1,9 @@
 ﻿using BH.Common.Enums;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Domain.Entities
+namespace BH.Common.Dtos
 {
-    public class Machine
+    public class MachineDto
     {
         public int MachineId { get; set; }
 
@@ -13,9 +11,8 @@ namespace Domain.Entities
 
         public bool IsLocked { get; set; }
 
+        public DomainDto Domain { get; set; }
 
-        public Domain Domain { get; set; }
-
-        public virtual IList<Ticket> Tickets { get; set; } = new List<Ticket>();
+        public IList<TicketDto> Tickets { get; set; }
     }
 }

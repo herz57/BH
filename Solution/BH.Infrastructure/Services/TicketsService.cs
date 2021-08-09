@@ -1,4 +1,5 @@
-﻿using BH.Infrastructure.Interfaces;
+﻿using BH.Common.Dtos;
+using BH.Infrastructure.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
 using System.Collections.Generic;
@@ -15,9 +16,18 @@ namespace Infrastructure.Services
             _ticketRepository = ticketRepository;
         }
 
-        public async Task<Ticket> GetRandomTicketByMachineIdAsync(int machineId)
+        public async Task<TicketDto> GetRandomTicketByMachineIdAsync(int machineId)
         {
-            return await _ticketRepository.GetRandomTicketByMachineIdAsync(machineId);
+            var result = await _ticketRepository.GetRandomTicketByMachineIdAsync(machineId);
+            return new TicketDto
+            {
+                TicketId = result.TicketId,
+                MachineId = result.MachineId,
+                Cost = result.Cost,
+                Win = result.Win,
+                PlayedOut = result.PlayedOut,
+                Symbols = result.Symbols,
+            };
         }
     }
 }
