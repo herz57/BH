@@ -2,31 +2,31 @@
 
 <h1>Main</h1>
 
-@if (ticket == null)
+<button @onclick="OnPlayClick"></button>
+
+@if (isLoading)
 {
     <p><em>Loading...</em></p>
 }
-else
+else if (ticket != null)
 {
+    <h2>You win @ticket.Win uah.</h2>
     <table class="table">
-        <thead>
-            <tr>
-                <th>Win</th>
-                <th>TicketId</th>
-                <th>MachineId</th>
-                <th>Cost</th>
-                <th>PlayedOut</th>
-                <th>Symbols</th>
-            </tr>
-        </thead>
         <tbody>
             <tr>
-                <td>@ticket.Win</td>
-                <td>@ticket.TicketId</td>
-                <td>@ticket.MachineId</td>
-                <td>@ticket.Cost</td>
-                <td>@ticket.PlayedOut</td>
-                <td>@ticket.Symbols</td>
+                <td><img src="@symbolsPathes[0][0]" /></td>
+                <td><img src="@symbolsPathes[1][0]" /></td>
+                <td><img src="@symbolsPathes[2][0]" /></td>
+            </tr>
+            <tr>
+                <td><img src="@symbolsPathes[0][1]" /></td>
+                <td><img src="@symbolsPathes[1][1]" /></td>
+                <td><img src="@symbolsPathes[2][1]" /></td>
+            </tr>
+            <tr>
+                <td><img src="@symbolsPathes[0][2]" /></td>
+                <td><img src="@symbolsPathes[1][2]" /></td>
+                <td><img src="@symbolsPathes[2][2]" /></td>
             </tr>
         </tbody>
     </table>
