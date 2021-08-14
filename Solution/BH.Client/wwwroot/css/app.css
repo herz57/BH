@@ -181,3 +181,8 @@ app {
         /*display: block;
     }
 }*/
+
+.play-btn {
+    width: 90px;
+    height: 25px;
+}

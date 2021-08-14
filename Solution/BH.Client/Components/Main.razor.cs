@@ -21,6 +21,7 @@ namespace BH.Client.Components
 
         private bool isLoading;
         private DomainType selectedDomain;
+        private bool[] showSymbols = new bool[3];
 
         //protected override async Task OnInitializedAsync()
         //{
@@ -28,11 +29,13 @@ namespace BH.Client.Components
 
         private async Task OnPlayClick()
         {
+            isLoading = true;
+            ResetShowSymbolsFlags();
             selectedDomain = DomainType.Third;
 
-            isLoading = true;
             ticket = await HttpService.GetTicketAsync(1);
             SetSymbolsInfo(ticket.Symbols);
+            HandleSymbolsShowingTimeout();
             isLoading = false;
         }
 
@@ -58,6 +61,21 @@ namespace BH.Client.Components
                 DomainType.Third => $"../css/img/star wars/{symbol}.png",
                 _ => throw new ArgumentException(),
             };
+        }
+
+        private async Task HandleSymbolsShowingTimeout()
+        {
+            showSymbols[0] = true;
+            //await Task.Delay(1);
+            showSymbols[1] = true;
+            //await Task.Delay(1);
+            showSymbols[2] = true;
+        }
+
+        private void ResetShowSymbolsFlags()
+        {
+            for (int i = 0; i < showSymbols.Count(); i++)
+                showSymbols[i] = false;
         }
     }
 }
