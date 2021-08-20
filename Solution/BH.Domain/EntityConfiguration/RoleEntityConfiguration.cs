@@ -1,9 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.EntityConfiguration
 {
@@ -11,7 +8,7 @@ namespace Domain.EntityConfiguration
     {
         public void Configure(EntityTypeBuilder<Role> builder)
         {
-            builder.HasKey(r => r.RoleId);
+            builder.HasKey(r => r.Id);
 
             builder
                 .HasMany(r => r.Users)

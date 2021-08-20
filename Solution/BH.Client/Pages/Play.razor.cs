@@ -9,9 +9,9 @@ using BH.Common.Enums;
 using System;
 using System.Linq;
 
-namespace BH.Client.Components
+namespace BH.Client.Pages
 {
-    public partial class Main
+    public partial class Play
     {
         [Inject]
         private IHttpService HttpService { get; set; }
@@ -42,7 +42,7 @@ namespace BH.Client.Components
         private void SetSymbolsInfo(string symbolsJson)
         {
             var symbolsInfo = JsonConvert.DeserializeObject<SymbolsInfo>(symbolsJson);
-            symbolsInfo.Symbols.ForEach(collection => 
+            symbolsInfo.Symbols.ForEach(collection =>
             {
                 for (int i = 0; i < collection.Count(); i++)
                 {

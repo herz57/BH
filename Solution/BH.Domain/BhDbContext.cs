@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace Domain
 {
-    public class BhDbContext : DbContext
+    public class BhDbContext : IdentityDbContext<User>
     {
         public BhDbContext(DbContextOptions<BhDbContext> dbContextOptions) : base(dbContextOptions) { }
 
@@ -15,10 +16,6 @@ namespace Domain
         public DbSet<Machine> Machines { get; set; }
 
         public DbSet<Ticket> Tickets { get; set; }
-
-        public DbSet<User> Users { get; set; }
-
-        public DbSet<Role> Roles { get; set; }
 
         public DbSet<Profile> Profiles { get; set; }
 

@@ -11,7 +11,7 @@ namespace Domain.EntityConfiguration
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(m => m.UserId);
+            builder.HasKey(m => m.Id);
 
             builder
                 .HasMany(u => u.Roles)

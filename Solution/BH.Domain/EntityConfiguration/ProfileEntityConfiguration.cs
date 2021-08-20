@@ -16,7 +16,7 @@ namespace Domain.EntityConfiguration
             builder
                 .HasOne(p => p.User)
                 .WithOne(u => u.Profile)
-                .HasForeignKey<User>(p => p.UserId);
+                .HasForeignKey<User>(p => p.Id);
         }
     }
 }
