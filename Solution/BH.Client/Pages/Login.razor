@@ -1,15 +1,22 @@
 ﻿@page "/login"
 
+<link href="./css/pages/login.css" rel="stylesheet" />
+
 <h3>Login</h3>
-<div class="row">
+<div class="login-form">
     <EditForm Model="LoginData" OnValidSubmit="LoginAsync">
-        <label for="username"></label>
-        <InputText id="username" @bind-Value="LoginData.UserName" />
-        <label for="password"></label>
-        <InputText id="password" @bind-Value="LoginData.Password" />
-        <p>
-            <button type="submit">Log in</button>
-        </p>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <InputText id="username" @bind-Value="LoginData.UserName" placeholder="Username" type="password" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <InputText id="password" @bind-Value="LoginData.Password" placeholder="Password" type="password" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </EditForm>
 </div>
 

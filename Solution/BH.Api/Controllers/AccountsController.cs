@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using BH.Domain.Entities;
 using BH.Common.Dtos;
 
-namespace CustomIdentityApp.Controllers
+namespace BH.Api.Controllers
 {
+    [Route("api/[controller]")]
     public class AccountsController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -17,23 +18,24 @@ namespace CustomIdentityApp.Controllers
             _signInManager = signInManager;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody]LoginDto dto)
         {
             if (ModelState.IsValid)
             {
-                var user = new User { Email = registerDto.UserName, UserName = registerDto.UserName };
-                var result = await _userManager.CreateAsync(user, registerDto.Password);
-
-                if (result.Succeeded)
+                var result = await _signInManager.PasswordSignInAsync(dto.UserName, dto.Password, true, false);
+                if (!result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, false);
-                }
-                else
-                {
-                    return BadRequest(result.Errors);
+                    ModelState.AddModelError(string.Empty, "Wrong login or password.");
                 }
             }
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
             return Ok();
         }
     }

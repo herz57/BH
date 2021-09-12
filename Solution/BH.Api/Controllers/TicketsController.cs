@@ -1,6 +1,5 @@
 ﻿using BH.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 
@@ -17,6 +16,7 @@ namespace BH.Api.Controllers
             _ticketsService = ticketsService;
         }
 
+        //[Authorize]
         [HttpGet("{machineId}")]
         public async Task<IActionResult> GetRandomTicketAsync([FromRoute]int machineId)
         {

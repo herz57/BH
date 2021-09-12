@@ -1,15 +1,24 @@
 ﻿using System.Threading.Tasks;
+using BH.Client.Interfaces;
 using BH.Common.Dtos;
+using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components;
 
 namespace BH.Client.Pages
 {
     public partial class Login
     {
-        public LoginDto LoginData { get; set; }
+        public LoginDto LoginData { get; set; } = new LoginDto();
 
-        public Task LoginAsync()
+        [Inject]
+        private ILocalStorageService LocalStorage { get; set; }
+
+        [Inject]
+        private IHttpService HttpService { get; set; }
+
+        public async Task LoginAsync()
         {
-            throw new System.Exception();
+            var token = (await HttpService.LoginAsync(LoginData));
         }
     }
 }

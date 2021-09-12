@@ -1,5 +1,6 @@
 using BH.Client.Interfaces;
 using BH.Client.Services;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,10 +29,11 @@ namespace BH.Client
 
             services.AddOptions();
             services.AddAuthorizationCore();
+            services.AddBlazoredLocalStorage();
 
-            services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:92/api") });
+            services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5005/api") });
             services.AddScoped<IHttpService, HttpService>();
-            services.AddScoped<AuthenticationStateProvider, IdentityAuthenticationStateProvider>();
+            //services.AddScoped<AuthenticationStateProvider, TokenAuthenticationStateProvider>();
 
             await builder.Build().RunAsync();
         }
