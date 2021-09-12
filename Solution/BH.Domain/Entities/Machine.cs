@@ -1,9 +1,7 @@
 ﻿using BH.Common.Enums;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Domain.Entities
+namespace BH.Domain.Entities
 {
     public class Machine
     {

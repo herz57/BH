@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
+﻿using BH.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Reflection;
 
 namespace Domain
 {
@@ -11,7 +11,7 @@ namespace Domain
     {
         public BhDbContext(DbContextOptions<BhDbContext> dbContextOptions) : base(dbContextOptions) { }
 
-        public DbSet<Entities.Domain> Domains { get; set; }
+        public DbSet<BH.Domain.Entities.Domain> Domains { get; set; }
 
         public DbSet<Machine> Machines { get; set; }
 
@@ -21,6 +21,15 @@ namespace Domain
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var typeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type =>
+                type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)));
+
+            foreach (var typeConfiguration in typeConfigurations)
+            {
+                dynamic configuration = Activator.CreateInstance(typeConfiguration);
+                modelBuilder.ApplyConfiguration(configuration);
+            }
+
             base.OnModelCreating(modelBuilder);
         }
     }

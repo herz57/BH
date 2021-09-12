@@ -1,11 +1,8 @@
-﻿using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using BH.Domain.Entities;
 
-namespace Domain.EntityConfiguration
+namespace BH.Domain.EntityConfiguration
 {
     class TicketEntityConfiguration : IEntityTypeConfiguration<Ticket>
     {

@@ -1,11 +1,8 @@
-﻿using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using BH.Domain.Entities;
 
-namespace Domain.EntityConfiguration
+namespace BH.Domain.EntityConfiguration
 {
     class ProfileEntityConfiguration : IEntityTypeConfiguration<Profile>
     {
@@ -16,7 +13,7 @@ namespace Domain.EntityConfiguration
             builder
                 .HasOne(p => p.User)
                 .WithOne(u => u.Profile)
-                .HasForeignKey<User>(p => p.Id);
+                .HasForeignKey<Profile>(p => p.UserId);
         }
     }
 }

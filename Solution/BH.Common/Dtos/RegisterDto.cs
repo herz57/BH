@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BH.Common.Dtos
 {
-     public class RegisterDto
+    public class RegisterDto
     {
         public string UserName { get; set; }
 

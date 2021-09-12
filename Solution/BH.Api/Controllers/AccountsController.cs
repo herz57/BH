@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Domain.Entities;
+using BH.Domain.Entities;
 using BH.Common.Dtos;
 
 namespace CustomIdentityApp.Controllers

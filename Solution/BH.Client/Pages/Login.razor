@@ -1,7 +1,15 @@
 ﻿@page "/login"
 
 <h3>Login</h3>
+<div class="row">
+    <EditForm Model="LoginData" OnValidSubmit="LoginAsync">
+        <label for="username"></label>
+        <InputText id="username" @bind-Value="LoginData.UserName" />
+        <label for="password"></label>
+        <InputText id="password" @bind-Value="LoginData.Password" />
+        <p>
+            <button type="submit">Log in</button>
+        </p>
+    </EditForm>
+</div>
 
-@code {
-
-}

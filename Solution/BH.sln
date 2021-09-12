@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BH.Infrastructure", "BH.Inf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BH.Common", "BH.Common\BH.Common.csproj", "{E7E63550-C266-4B15-9AE8-DCD288B809C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BH.Client", "BH.Client\BH.Client.csproj", "{18E2C6DB-8369-412F-B753-C699EEA25CDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BH.Client", "BH.Client\BH.Client.csproj", "{18E2C6DB-8369-412F-B753-C699EEA25CDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
