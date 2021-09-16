@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BH.Domain.Seed;
+using System;
+using Microsoft.AspNetCore.Http;
 
 namespace BH.Api
 {
@@ -29,15 +31,16 @@ namespace BH.Api
             services.AddControllers();
             services.AddDbContext<BhDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BH")));
             services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<BhDbContext>();
+                .AddEntityFrameworkStores<BhDbContext>()
+                .AddDefaultTokenProviders();
 
-            //services.AddAuthentication("Bearer")
-            //    .AddJwtBearer("Bearer", opt =>
-            //    {
-            //        opt.RequireHttpsMetadata = false;
-            //        opt.Authority = "https://localhost:5005";
-            //        opt.Audience = "companyApi";
-            //    });
+            services.AddAuthentication().AddCookie(opt => 
+            {
+                opt.Cookie.Name = "CookieName1";
+                opt.ExpireTimeSpan = TimeSpan.FromHours(24);
+                opt.SlidingExpiration = true;
+                opt.Cookie.SameSite = SameSiteMode.None;
+            });
 
             services.AddCors(options =>
             {
@@ -52,7 +55,6 @@ namespace BH.Api
 
             services.AddTransient<ITicketsService, TicketsService>();
             services.AddTransient<ITicketsRepository, TicketsRepository>();
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
