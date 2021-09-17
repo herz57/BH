@@ -31,15 +31,14 @@ namespace BH.Api
             services.AddControllers();
             services.AddDbContext<BhDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BH")));
             services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<BhDbContext>()
-                .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<BhDbContext>();
 
-            services.AddAuthentication().AddCookie(opt => 
+            services.ConfigureApplicationCookie(options =>
             {
-                opt.Cookie.Name = "CookieName1";
-                opt.ExpireTimeSpan = TimeSpan.FromHours(24);
-                opt.SlidingExpiration = true;
-                opt.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.Name = "AuthCookie";
+                options.ExpireTimeSpan = TimeSpan.FromHours(24);
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.None;
             });
 
             services.AddCors(options =>
