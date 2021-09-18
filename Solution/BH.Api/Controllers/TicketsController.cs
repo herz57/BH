@@ -21,7 +21,7 @@ namespace BH.Api.Controllers
         [HttpGet("{machineId}")]
         public async Task<IActionResult> GetRandomTicketAsync([FromRoute]int machineId)
         {
-            var result = await _ticketsService.GetRandomTicketByMachineIdAsync(machineId);
+            var result = await _ticketsService.GetRandomTicketByMachineIdAsync(machineId); 
             return Ok(result);
         }
     }

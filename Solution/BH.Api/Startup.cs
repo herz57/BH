@@ -26,9 +26,14 @@ namespace BH.Api
 
         public IConfiguration Configuration { get; }
 
+        readonly string MyOrigins = "MyOrigins";
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+
             services.AddDbContext<BhDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BH")));
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<BhDbContext>();
@@ -37,18 +42,16 @@ namespace BH.Api
             {
                 options.Cookie.Name = "AuthCookie";
                 options.ExpireTimeSpan = TimeSpan.FromHours(24);
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.None;
             });
 
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
+                options.AddPolicy(name: MyOrigins,
+                    builder => {
+                        builder.WithOrigins("https://localhost:5001")
+                            .AllowAnyHeader()
                             .AllowAnyMethod()
-                            .AllowAnyHeader();
+                            .AllowCredentials();
                     });
             });
 
@@ -69,7 +72,7 @@ namespace BH.Api
             }
 
             app.UseRouting();
-            app.UseCors();
+            app.UseCors(MyOrigins);
 
             app.UseAuthentication();
             app.UseAuthorization();

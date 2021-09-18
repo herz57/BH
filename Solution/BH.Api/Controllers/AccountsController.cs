@@ -3,6 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using BH.Domain.Entities;
 using BH.Common.Dtos;
+using System.Collections;
+using System.Security.Claims;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BH.Api.Controllers
 {
@@ -37,6 +42,29 @@ namespace BH.Api.Controllers
         {
             await _signInManager.SignOutAsync();
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("claims")]
+        public IActionResult GetUserClaims()
+        {
+            return Ok(GetAllowedUserClaims());
+        }
+
+        private List<Claim> GetAllowedUserClaims()
+        {
+            var allowedClaims = new string[] 
+            {
+                ClaimTypes.Name,
+                ClaimTypes.Email,
+                ClaimTypes.Role
+            };
+
+            return User
+                .Claims
+                .Where(c => allowedClaims.Contains(c.Type))
+                .Select(c => new Claim(c.Type, c.Value))
+                .ToList();
         }
     }
 }
