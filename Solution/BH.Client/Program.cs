@@ -1,5 +1,7 @@
+using BH.Client.ApiHandlers;
 using BH.Client.Interfaces;
 using BH.Client.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,10 +27,18 @@ namespace BH.Client
 
             services.AddOptions();
             services.AddAuthorizationCore();
+            services.AddTransient<StatusCodeHttpMessageHandler>();
+            services.AddTransient<IHttpService, HttpService>();
 
-            services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5005/api") });
-            services.AddScoped<IHttpService, HttpService>();
-            services.AddScoped<AuthStateProvider>();
+            services.AddHttpClient("ApiClient", (sp, client) =>
+            {
+                client.BaseAddress = new Uri("https://localhost:5005/api");
+            }).AddHttpMessageHandler<StatusCodeHttpMessageHandler>();
+
+            services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiClient"));
+            services.AddSingleton<AuthStateProvider>();
+            services.AddSingleton<AuthenticationStateProvider>(provider => provider.GetRequiredService<AuthStateProvider>());
+
             await builder.Build().RunAsync();
         }
     }

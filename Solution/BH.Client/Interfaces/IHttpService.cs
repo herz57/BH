@@ -1,17 +1,19 @@
-﻿using BH.Common.Dtos;
+﻿using BH.Client.Models;
+using BH.Common.Dtos;
+using BH.Common.Models;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace BH.Client.Interfaces
 {
     public interface IHttpService
     {
-        Task<TicketDto> GetTicketAsync(int machineId);
+        Task<ApiResponse<TicketDto>> GetTicketAsync(int machineId);
 
-        Task<HttpResponseMessage> LoginAsync(LoginDto dto);
+        Task<ApiResponse> LoginAsync(LoginDto dto);
 
-        Task<List<Claim>> GetClaimsAsync();
+        Task<ApiResponse> LogoutAsync();
+
+        Task<ApiResponse<List<ClaimValue>>> GetClaimsAsync();
     }
 }

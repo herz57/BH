@@ -33,7 +33,9 @@ namespace BH.Client.Pages
             ResetShowSymbolsFlags();
             selectedDomain = DomainType.Third;
 
-            ticket = await HttpService.GetTicketAsync(1);
+            var response = await HttpService.GetTicketAsync(1);
+            ticket = response.Entity;
+
             SetSymbolsInfo(ticket.Symbols);
             HandleSymbolsShowingTimeout();
             isLoading = false;

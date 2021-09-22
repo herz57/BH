@@ -1,13 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using BH.Client.Interfaces
 
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
+@inject IHttpService HttpService
 
 <AuthorizeView>
     <Authorized>
         Hello, @context.User.Identity.Name!
-        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+        <button class="nav-link btn btn-link" @onclick="LogoutAsync">Log out</button>
         <@BH.Client.Pages.Play />
     </Authorized>
     <NotAuthorized>
@@ -16,9 +18,12 @@
 </AuthorizeView>
 
 @code{
-    private async Task BeginSignOut(MouseEventArgs args)
+    private async Task LogoutAsync(MouseEventArgs args)
     {
-        await SignOutManager.SetSignOutState();
-        Navigation.NavigateTo("authentication/logout");
+        var result = await HttpService.LogoutAsync();
+        if (result.IsSuccess)
+        {
+            Navigation.NavigateTo("/login");
+        }
     }
 }

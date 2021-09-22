@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using BH.Domain.Seed;
 using System;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace BH.Api
 {
@@ -42,6 +43,11 @@ namespace BH.Api
             {
                 options.Cookie.Name = "AuthCookie";
                 options.ExpireTimeSpan = TimeSpan.FromHours(24);
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return Task.CompletedTask;
+                };
             });
 
             services.AddCors(options =>

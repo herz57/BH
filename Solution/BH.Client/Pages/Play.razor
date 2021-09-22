@@ -1,5 +1,7 @@
 ﻿@page "/play"
 
+<link href="./css/pages/play.css" rel="stylesheet" />
+
 <h1>Main</h1>
 
 @if (isLoading)
@@ -9,7 +11,7 @@
 else if (ticket != null)
 {
     <h2>You win @ticket.Win uah.</h2>
-    <table class="table">
+    <table class="table play-table">
         <tbody>
             <tr>
                 @if (showSymbols[0])

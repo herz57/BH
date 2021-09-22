@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using BH.Common.Models;
 
 namespace BH.Api.Controllers
 {
@@ -37,7 +38,8 @@ namespace BH.Api.Controllers
             return Ok();
         }
 
-        [HttpPost]
+        [Authorize]
+        [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -51,7 +53,7 @@ namespace BH.Api.Controllers
             return Ok(GetAllowedUserClaims());
         }
 
-        private List<Claim> GetAllowedUserClaims()
+        private List<ClaimValue> GetAllowedUserClaims()
         {
             var allowedClaims = new string[] 
             {
@@ -63,7 +65,7 @@ namespace BH.Api.Controllers
             return User
                 .Claims
                 .Where(c => allowedClaims.Contains(c.Type))
-                .Select(c => new Claim(c.Type, c.Value))
+                .Select(c => new ClaimValue(c.Type, c.Value))
                 .ToList();
         }
     }
