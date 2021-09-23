@@ -16,7 +16,7 @@ namespace Infrastructure.Services
 
         public async Task<TicketDto> GetRandomTicketByMachineIdAsync(int machineId)
         {
-            var result = await _ticketRepository.GetRandomTicketByMachineIdAsync(machineId);
+            var result = await _ticketRepository.GetRandomTicketByMachineIdAsync(default, machineId, default);
             return new TicketDto
             {
                 TicketId = result.TicketId,
