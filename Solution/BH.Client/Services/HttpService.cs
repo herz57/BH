@@ -8,18 +8,23 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Components.WebAssembly.Http;
 using System.Text;
-using BH.Client.Models;
 using BH.Common.Models;
+using BH.Common.Extensions;
+using Microsoft.JSInterop;
 
 namespace BH.Client.Services
 {
     public class HttpService : IHttpService
     {
         private readonly HttpClient _httpClient;
+        private readonly IJSRuntime _jsRuntime;
 
-        public HttpService(HttpClient httpClient)
+
+        public HttpService(HttpClient httpClient,
+            IJSRuntime jsRuntime)
         {
             _httpClient = httpClient;
+            _jsRuntime = jsRuntime;
         }
 
         public async Task<ApiResponse> LoginAsync(LoginDto dto)
@@ -40,10 +45,12 @@ namespace BH.Client.Services
             return await GetAsync<List<ClaimValue>>(uri);
         }
 
-        public async Task<ApiResponse<TicketDto>> GetTicketAsync(int machineId)
+        public async Task<ApiResponse<PlayResponseDto>> GetTicketAsync(int machineId, int ticketCost)
         {
-            var uri = new Uri($"{_httpClient.BaseAddress}/tickets/1");
-            return await GetAsync<TicketDto>(uri);
+            var uri = new Uri($"{_httpClient.BaseAddress}/tickets/{machineId}")
+                .AddQuery("ticketCost", ticketCost.ToString());
+
+            return await GetAsync<PlayResponseDto>(uri);
         }
 
         #region private
@@ -51,42 +58,50 @@ namespace BH.Client.Services
         private async Task<ApiResponse<TOut>> GetAsync<TOut>(Uri uri) where TOut : class
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
-            request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
-
-            var response = await _httpClient.SendAsync(request);
-            var content = response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<TOut>() : null;
-            return new ApiResponse<TOut>(response.IsSuccessStatusCode, response.StatusCode, content);
+            return await SendAsync<TOut>(request);
         }
 
         private async Task<ApiResponse<TOut>> PostAsync<TInp, TOut>(Uri uri, TInp dto) where TOut : class
         {
-            var response = await PostBaseAsync(uri, dto);
-            var content = response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<TOut>() : null;
-            return new ApiResponse<TOut>(response.IsSuccessStatusCode, response.StatusCode, content);
+            var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            var json = JsonConvert.SerializeObject(dto);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            return await SendAsync<TOut>(request);
         }
 
         private async Task<ApiResponse> PostAsync<TInp>(Uri uri, TInp dto)
         {
-            var response = await PostBaseAsync(uri, dto);
-            return new ApiResponse(response.IsSuccessStatusCode, response.StatusCode);
+            var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            var json = JsonConvert.SerializeObject(dto);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            return await SendAsync<object>(request);
         }
 
         private async Task<ApiResponse> PostAsync(Uri uri)
         {
-            var response = await PostBaseAsync<object>(uri, null);
-            return new ApiResponse(response.IsSuccessStatusCode, response.StatusCode);
+            var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            return await SendAsync<object>(request);
         }
 
-        private async Task<HttpResponseMessage> PostBaseAsync<TInp>(Uri uri, TInp dto)
+        private async Task<ApiResponse<TOut>> SendAsync<TOut>(HttpRequestMessage request)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, uri);
-            if (dto != null)
-            {
-                var json = JsonConvert.SerializeObject(dto);
-                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-            }
             request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
-            return await _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadFromJsonAsync<ApiResponse<ErrorDto>>();
+
+                if (!string.IsNullOrEmpty(error.Content?.Message))
+                {
+                    await _jsRuntime.InvokeVoidAsync("alert", error.Content.Message);
+                }
+                return new ApiResponse<TOut>(error.IsSuccess, error.StatusCode);
+            }
+            else
+            {
+                return await response.Content.ReadFromJsonAsync<ApiResponse<TOut>>();
+            }
         }
 
         #endregion

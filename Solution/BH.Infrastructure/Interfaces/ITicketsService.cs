@@ -5,6 +5,6 @@ namespace BH.Infrastructure.Interfaces
 {
     public interface ITicketsService
     {
-        Task<TicketDto> GetRandomTicketByMachineIdAsync(int machineId);
+        Task<PlayResponseDto> GetRandomTicketByMachineIdAsync(int profileId, int machineId, int ticketCost);
     }
 }

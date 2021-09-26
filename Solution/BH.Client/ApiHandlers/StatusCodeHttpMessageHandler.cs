@@ -1,6 +1,8 @@
 ﻿using BH.Client.Const;
+using BH.Common.Dtos;
 using BH.Common.Extensions;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -21,9 +23,12 @@ namespace BH.Client.ApiHandlers
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var response = await base.SendAsync(request, cancellationToken);
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            if (!response.IsSuccessStatusCode)
             {
-                NavigateToLogin();
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    NavigateToLogin();
+                }
             }
 
             return response;

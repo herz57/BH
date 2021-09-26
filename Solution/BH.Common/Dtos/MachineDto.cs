@@ -13,6 +13,6 @@ namespace BH.Common.Dtos
 
         public DomainDto Domain { get; set; }
 
-        public IList<TicketDto> Tickets { get; set; }
+        public IList<PlayResponseDto> Tickets { get; set; }
     }
 }

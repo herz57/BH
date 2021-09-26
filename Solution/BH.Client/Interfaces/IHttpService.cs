@@ -8,7 +8,7 @@ namespace BH.Client.Interfaces
 {
     public interface IHttpService
     {
-        Task<ApiResponse<TicketDto>> GetTicketAsync(int machineId);
+        Task<ApiResponse<PlayResponseDto>> GetTicketAsync(int machineId, int ticketCost);
 
         Task<ApiResponse> LoginAsync(LoginDto dto);
 

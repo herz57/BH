@@ -16,7 +16,7 @@ namespace BH.Client.Pages
         [Inject]
         private IHttpService HttpService { get; set; }
 
-        private TicketDto ticket;
+        private PlayResponseDto playResponse;
         private List<List<string>> symbolsPathes;
 
         private bool isLoading;
@@ -33,12 +33,15 @@ namespace BH.Client.Pages
             ResetShowSymbolsFlags();
             selectedDomain = DomainType.Third;
 
-            var response = await HttpService.GetTicketAsync(1);
-            ticket = response.Entity;
-
-            SetSymbolsInfo(ticket.Symbols);
-            HandleSymbolsShowingTimeout();
+            var response = await HttpService.GetTicketAsync(1, 10);
             isLoading = false;
+
+            if (!response.IsSuccess)
+                return;
+
+            playResponse = response.Content;
+            SetSymbolsInfo(playResponse.Symbols);
+            HandleSymbolsShowingTimeout();
         }
 
         private void SetSymbolsInfo(string symbolsJson)

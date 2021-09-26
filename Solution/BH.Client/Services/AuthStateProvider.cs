@@ -55,7 +55,7 @@ namespace BH.Client.Services
             if (!response.IsSuccess)
                 return;
 
-            var claims = response.Entity.Select(c => new Claim(c.Type, c.Value));
+            var claims = response.Content.Select(c => new Claim(c.Type, c.Value));
             var identity = new ClaimsIdentity(nameof(AuthStateProvider), ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             identity.AddClaims(claims);
             _user = new ClaimsPrincipal(identity);

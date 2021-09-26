@@ -15,6 +15,9 @@ using BH.Domain.Seed;
 using System;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using BH.Domain.Interfaces;
+using BH.Domain.Repositories;
+using BH.Api.Middlewares;
 
 namespace BH.Api
 {
@@ -62,21 +65,25 @@ namespace BH.Api
             });
 
             services.AddTransient<ITicketsService, TicketsService>();
+
             services.AddTransient<ITicketsRepository, TicketsRepository>();
+            services.AddTransient<IProfileRepository, ProfileRepository>();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
+            //    app.UseMiddleware<ExceptionMiddleware>();
+            //    app.UseHsts();
+            //}
 
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseRouting();
             app.UseCors(MyOrigins);
 

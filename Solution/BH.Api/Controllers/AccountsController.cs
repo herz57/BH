@@ -3,24 +3,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using BH.Domain.Entities;
 using BH.Common.Dtos;
-using System.Collections;
 using System.Security.Claims;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using BH.Common.Models;
+using BH.Api.Controllers.Base;
+using System;
+using System.Net;
 
 namespace BH.Api.Controllers
 {
     [Route("api/[controller]")]
-    public class AccountsController : Controller
+    public class AccountsController : BaseController
     {
-        private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AccountsController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountsController(SignInManager<User> signInManager,
+            IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
-            _userManager = userManager;
             _signInManager = signInManager;
         }
 
@@ -35,7 +37,7 @@ namespace BH.Api.Controllers
                     ModelState.AddModelError(string.Empty, "Wrong login or password.");
                 }
             }
-            return Ok();
+            return Ok(new ApiResponse());
         }
 
         [Authorize]
@@ -43,14 +45,14 @@ namespace BH.Api.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return Ok();
+            return Ok(new ApiResponse());
         }
 
         [Authorize]
         [HttpGet("claims")]
         public IActionResult GetUserClaims()
         {
-            return Ok(GetAllowedUserClaims());
+            return Ok(new ApiResponse<List<ClaimValue>>(GetAllowedUserClaims()));
         }
 
         private List<ClaimValue> GetAllowedUserClaims()
