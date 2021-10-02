@@ -1,63 +1,81 @@
 ﻿@page "/play"
 
-<link href="./css/pages/play.css" rel="stylesheet" />
+@using BH.Common.Extensions
 
-<h1>Main</h1>
+<link href="./css/pages/play.css" rel="stylesheet" />
 
 @if (isLoading)
 {
     <p><em>Loading...</em></p>
 }
-else if (playResponse != null)
+else
 {
-    <h2>You win @playResponse.Win uah.</h2>
-    <h2>Balance: @playResponse.ProfileBalance uah.</h2>
-    <table class="table play-table">
-        <tbody>
-            <tr>
-                @if (showSymbols[0])
-                {
-                    <td><img src="@symbolsPathes[0][0]" /></td>
-                }
-                @if (showSymbols[1])
-                {
-                    <td><img src="@symbolsPathes[1][0]" /></td>
-                }
-                @if (showSymbols[2])
-                {
-                    <td><img src="@symbolsPathes[2][0]" /></td>
-                }
-            </tr>
-            <tr>
-                @if (showSymbols[0])
-                {
-                    <td><img src="@symbolsPathes[0][1]" /></td>
-                }
-                @if (showSymbols[1])
-                {
-                    <td><img src="@symbolsPathes[1][1]" /></td>
-                }
-                @if (showSymbols[2])
-                {
-                    <td><img src="@symbolsPathes[2][1]" /></td>
-                }
-            </tr>
-            <tr>
-                @if (showSymbols[0])
-                {
-                    <td><img src="@symbolsPathes[0][2]" /></td>
-                }
-                @if (showSymbols[1])
-                {
-                    <td><img src="@symbolsPathes[1][2]" /></td>
-                }
-                @if (showSymbols[2])
-                {
-                    <td><img src="@symbolsPathes[2][2]" /></td>
-                }
-            </tr>
-        </tbody>
-    </table>
+
+    <select @onchange="OnDomainChange">
+        @foreach (var domainType in availableDomainTypes)
+        {
+            <option value=@((int)domainType)>@domainType.GetEnumDescription()</option>
+        }
+    </select>
+    <select @onchange="OnCostChange">
+        @foreach (var cost in availableCosts)
+        {
+            <option value=@cost>@cost</option>
+        }
+    </select>
+
+    if (playResponse != null)
+    {
+        <h2>Balance: @playResponse.ProfileBalance uah.</h2>
+        <h2>You win @playResponse.Win uah.</h2>
+        <table class="table play-table">
+            <tbody>
+                <tr>
+                    @if (showSymbols[0])
+                    {
+                        <td><img src="@symbolsPathes[0][0]" /></td>
+                    }
+                    @if (showSymbols[1])
+                    {
+                        <td><img src="@symbolsPathes[1][0]" /></td>
+                    }
+                    @if (showSymbols[2])
+                    {
+                        <td><img src="@symbolsPathes[2][0]" /></td>
+                    }
+                </tr>
+                <tr>
+                    @if (showSymbols[0])
+                    {
+                        <td><img src="@symbolsPathes[0][1]" /></td>
+                    }
+                    @if (showSymbols[1])
+                    {
+                        <td><img src="@symbolsPathes[1][1]" /></td>
+                    }
+                    @if (showSymbols[2])
+                    {
+                        <td><img src="@symbolsPathes[2][1]" /></td>
+                    }
+                </tr>
+                <tr>
+                    @if (showSymbols[0])
+                    {
+                        <td><img src="@symbolsPathes[0][2]" /></td>
+                    }
+                    @if (showSymbols[1])
+                    {
+                        <td><img src="@symbolsPathes[1][2]" /></td>
+                    }
+                    @if (showSymbols[2])
+                    {
+                        <td><img src="@symbolsPathes[2][2]" /></td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    }
+
 }
 <button @onclick="OnPlayClick" class="play-btn">Play</button>
 

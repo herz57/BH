@@ -9,10 +9,12 @@ namespace BH.Domain.Entities
 
         public DomainType DomainType { get; set; }
 
-        public bool IsLocked { get; set; }
+        public string LockedByUserId { get; set; }
 
 
         public Domain Domain { get; set; }
+
+        public User User { get; set; }
 
         public virtual IList<Ticket> Tickets { get; set; } = new List<Ticket>();
     }

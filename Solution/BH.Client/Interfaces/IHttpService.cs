@@ -1,5 +1,6 @@
 ﻿using BH.Client.Models;
 using BH.Common.Dtos;
+using BH.Common.Enums;
 using BH.Common.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,5 +16,7 @@ namespace BH.Client.Interfaces
         Task<ApiResponse> LogoutAsync();
 
         Task<ApiResponse<List<ClaimValue>>> GetClaimsAsync();
+
+        Task<ApiResponse<LockMachineDto>> LockMachineAsync(DomainType domainType);
     }
 }

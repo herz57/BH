@@ -16,16 +16,20 @@ namespace BH.Client.Pages
         [Inject]
         private IHttpService HttpService { get; set; }
 
+        private bool isLoading;
         private PlayResponseDto playResponse;
         private List<List<string>> symbolsPathes;
-
-        private bool isLoading;
-        private DomainType selectedDomain;
         private bool[] showSymbols = new bool[3];
+        private List<int> availableCosts = new List<int>();
+        private IEnumerable<DomainType> availableDomainTypes = Enum.GetValues(typeof(DomainType)).Cast<DomainType>();
 
-        //protected override async Task OnInitializedAsync()
-        //{
-        //}
+        private DomainType selectedDomain;
+        private int selectedCost;
+        private int selectedMachine;
+
+        protected override async Task OnInitializedAsync()
+        {
+        }
 
         private async Task OnPlayClick()
         {
@@ -33,15 +37,43 @@ namespace BH.Client.Pages
             ResetShowSymbolsFlags();
             selectedDomain = DomainType.Third;
 
-            var response = await HttpService.GetTicketAsync(1, 10);
+            var response = await HttpService.GetTicketAsync(selectedMachine, selectedCost);
             isLoading = false;
 
             if (!response.IsSuccess)
                 return;
 
+            SetSymbolsInfo(response.Content.Symbols);
             playResponse = response.Content;
-            SetSymbolsInfo(playResponse.Symbols);
             HandleSymbolsShowingTimeout();
+        }
+
+        private void OnCostChange(ChangeEventArgs e)
+        {
+            selectedCost = Convert.ToInt32(e.Value);
+        }
+
+        private async Task OnDomainChange(ChangeEventArgs e)
+        {
+            var domainType = (DomainType)Convert.ToInt32(e.Value);
+            selectedDomain = domainType;
+            await InitMachineAsync(domainType);
+        }
+
+        private async Task InitMachineAsync(DomainType domainType)
+        {
+            if (isLoading)
+                return;
+
+            isLoading = true;
+            var response = await HttpService.LockMachineAsync(domainType);
+            isLoading = false;
+
+            if (!response.IsSuccess)
+                return;
+
+            selectedMachine = response.Content.MachineId;
+            availableCosts = response.Content.AvailableCosts;
         }
 
         private void SetSymbolsInfo(string symbolsJson)

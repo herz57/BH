@@ -11,6 +11,10 @@ using System.Text;
 using BH.Common.Models;
 using BH.Common.Extensions;
 using Microsoft.JSInterop;
+using BH.Common.Enums;
+using Microsoft.AspNetCore.Components;
+using System.Net;
+using BH.Client.Const;
 
 namespace BH.Client.Services
 {
@@ -18,13 +22,16 @@ namespace BH.Client.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IJSRuntime _jsRuntime;
+        private readonly NavigationManager _navigation;
 
 
         public HttpService(HttpClient httpClient,
-            IJSRuntime jsRuntime)
+            IJSRuntime jsRuntime,
+            NavigationManager navigation)
         {
             _httpClient = httpClient;
             _jsRuntime = jsRuntime;
+            _navigation = navigation;
         }
 
         public async Task<ApiResponse> LoginAsync(LoginDto dto)
@@ -51,6 +58,12 @@ namespace BH.Client.Services
                 .AddQuery("ticketCost", ticketCost.ToString());
 
             return await GetAsync<PlayResponseDto>(uri);
+        }
+
+        public async Task<ApiResponse<LockMachineDto>> LockMachineAsync(DomainType domainType)
+        {
+            var uri = new Uri($"{_httpClient.BaseAddress}/machines/{domainType}");
+            return await PostAsync<LockMachineDto>(uri);
         }
 
         #region private
@@ -83,6 +96,12 @@ namespace BH.Client.Services
             return await SendAsync<object>(request);
         }
 
+        private async Task<ApiResponse<TOut>> PostAsync<TOut>(Uri uri)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            return await SendAsync<TOut>(request);
+        }
+
         private async Task<ApiResponse<TOut>> SendAsync<TOut>(HttpRequestMessage request)
         {
             request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
@@ -90,8 +109,14 @@ namespace BH.Client.Services
 
             if (!response.IsSuccessStatusCode)
             {
-                var error = await response.Content.ReadFromJsonAsync<ApiResponse<ErrorDto>>();
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    var url = new Uri(Consts.Pages.Login).AddQuery("returnUrl", _navigation.Uri).PathAndQuery;
+                    _navigation.NavigateTo(url);
+                    return new ApiResponse<TOut>(response.IsSuccessStatusCode, response.StatusCode);
+                }
 
+                var error = await response.Content.ReadFromJsonAsync<ApiResponse<ErrorDto>>();
                 if (!string.IsNullOrEmpty(error.Content?.Message))
                 {
                     await _jsRuntime.InvokeVoidAsync("alert", error.Content.Message);

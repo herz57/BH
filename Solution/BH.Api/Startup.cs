@@ -65,10 +65,11 @@ namespace BH.Api
             });
 
             services.AddTransient<ITicketsService, TicketsService>();
+            services.AddTransient<IMachinesService, MachinesService>();
 
             services.AddTransient<ITicketsRepository, TicketsRepository>();
             services.AddTransient<IProfileRepository, ProfileRepository>();
-
+            services.AddTransient<IMachinesRepository, MachinesRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -13,17 +13,47 @@ namespace Domain.Repositories
     {
         public TicketsRepository(BhDbContext context) : base(context) { }
         
-        public async Task<Ticket> GetRandomTicketByMachineIdAsync(int profileId, int machineId, int ticketCost)
+        public async Task<int> PlayAsync(string userId, int machineId, int ticketCost)
         {
-            var query = "exec dbo.Play @profileId, @machineId, @ticketCost";
-            var parms = new List<SqlParameter>
+            var query = "exec dbo.Play @userId, @machineId, @ticketCost, @ticketId out";
+            var ticketId = new SqlParameter
             {
-                new SqlParameter { ParameterName = "@profileId", Value = profileId },
-                new SqlParameter { ParameterName = "@machineId", Value = machineId },
-                new SqlParameter { ParameterName = "@ticketCost", Value = ticketCost }
+                ParameterName = "@ticketId",
+                DbType = System.Data.DbType.Int32,
+                Size = int.MaxValue,
+                Direction = System.Data.ParameterDirection.Output
             };
 
-            return (await Context.Tickets.FromSqlRaw(query, parms.ToArray()).ToListAsync()).Single();
+            var parms = new List<SqlParameter>
+            {
+                new SqlParameter { ParameterName = "@userId", Value = userId },
+                new SqlParameter { ParameterName = "@machineId", Value = machineId },
+                new SqlParameter { ParameterName = "@ticketCost", Value = ticketCost },
+                ticketId
+            };
+
+            await Context.Database.ExecuteSqlRawAsync(query, parms);
+            return (int)ticketId.Value;
+        }
+
+        public async Task<Ticket> GetTicketByIdAsync(int ticketId)
+        {
+            var query = "select * from dbo.Tickets t where t.TicketId = @ticketId";
+            var param = new SqlParameter { ParameterName = "@ticketId", Value = ticketId };
+            return await Context.Tickets.FromSqlRaw(query, param).SingleOrDefaultAsync();
+        }
+
+        public async Task<List<int>> GetAvailableMachineCosts(int machineId)
+        {
+            var query = @"select t.Cost from dbo.Tickets t
+                where t.MachineId = @machineId
+                group by t.Cost";
+
+            var param = new SqlParameter { ParameterName = "@machineId", Value = machineId };
+            return await Context.Tickets
+                .FromSqlRaw(query, param)
+                .Select(t => t.Cost)
+                .ToListAsync();
         }
     }
 }

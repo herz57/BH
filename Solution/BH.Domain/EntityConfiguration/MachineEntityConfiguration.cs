@@ -9,11 +9,14 @@ namespace BH.Domain.EntityConfiguration
         public void Configure(EntityTypeBuilder<Machine> builder)
         {
             builder.HasKey(m => m.MachineId);
-            builder.Property(m => m.IsLocked).HasDefaultValueSql("0");
 
             builder.HasOne(m => m.Domain)
                 .WithMany(m => m.Machines)
                 .HasForeignKey(t => t.DomainType);
+
+            builder.HasOne(m => m.User)
+                .WithOne(m => m.LockedMachine)
+                .HasForeignKey<Machine>(p => p.LockedByUserId);
         }
     }
 }

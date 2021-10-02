@@ -25,9 +25,9 @@ namespace BH.Api.Controllers
 
         [Authorize]
         [HttpGet("{machineId}")]
-        public async Task<IActionResult> GetRandomTicketAsync([FromRoute]int machineId, [FromQuery] int ticketCost)
+        public async Task<IActionResult> PlayAsync([FromRoute]int machineId, [FromQuery] int ticketCost)
         {
-            var result = await _ticketsService.GetRandomTicketByMachineIdAsync(CurrentUser.Profile.ProfileId, machineId, ticketCost); 
+            var result = await _ticketsService.PlayAsync(CurrentUser, machineId, ticketCost); 
             return Ok(new ApiResponse<PlayResponseDto>(result));
         }
     }

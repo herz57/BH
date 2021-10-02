@@ -5,5 +5,7 @@ namespace BH.Domain.Entities
     public class User : IdentityUser
     {
         public Profile Profile { get; set; }
+
+        public Machine LockedMachine { get; set; }
     }
 }
