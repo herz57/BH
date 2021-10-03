@@ -12,10 +12,10 @@ namespace Infrastructure.Services
     public class TicketsService : ITicketsService
     {
         private readonly ITicketsRepository _ticketRepository;
-        private readonly IProfileRepository _profileRepository;
+        private readonly IProfilesRepository _profileRepository;
         
         public TicketsService(ITicketsRepository ticketRepository,
-            IProfileRepository profileRepository)
+            IProfilesRepository profileRepository)
         {
             _ticketRepository = ticketRepository;
             _profileRepository = profileRepository;
@@ -30,7 +30,7 @@ namespace Infrastructure.Services
                 return new PlayResponseDto
                 {
                     Win = result.Win,
-                    ProfileBalance = await _profileRepository.GetBalance(currentUser.Profile.ProfileId),
+                    ProfileBalance = await _profileRepository.GetBalanceAsync(currentUser.Profile.ProfileId),
                     Symbols = result.Symbols,
                 };
             }

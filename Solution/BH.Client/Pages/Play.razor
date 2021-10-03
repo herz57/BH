@@ -10,23 +10,23 @@
 }
 else
 {
-
-    <select @onchange="OnDomainChange">
+    <select value="@SelectedDomain" @onchange="@OnDomainChange" class="form-control">
         @foreach (var domainType in availableDomainTypes)
         {
-            <option value=@((int)domainType)>@domainType.GetEnumDescription()</option>
+            <option value=@(domainType)>@domainType.GetEnumDescription()</option>
         }
     </select>
-    <select @onchange="OnCostChange">
+    <select @bind="SelectedCost">
         @foreach (var cost in availableCosts)
         {
             <option value=@cost>@cost</option>
         }
     </select>
 
+    <h2>Balance: @profileBalance uah.</h2>
+
     if (playResponse != null)
     {
-        <h2>Balance: @playResponse.ProfileBalance uah.</h2>
         <h2>You win @playResponse.Win uah.</h2>
         <table class="table play-table">
             <tbody>

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace BH.Domain.Repositories
 {
-    public class ProfileRepository : BaseRepository<Profile>, IProfileRepository
+    public class ProfilesRepository : BaseRepository<Profile>, IProfilesRepository
     {
-        public ProfileRepository(BhDbContext context) : base(context) { }
+        public ProfilesRepository(BhDbContext context) : base(context) { }
 
-        public async Task<long> GetBalance(int profileId)
+        public async Task<long> GetBalanceAsync(int profileId)
         {
             var query = "select p.Balance from dbo.Profiles p where p.ProfileId = @profileId";
             var result = await Context.Profiles

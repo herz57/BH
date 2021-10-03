@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using BH.Domain.Interfaces;
 using BH.Domain.Repositories;
 using BH.Api.Middlewares;
+using BH.Infrastructure.Services;
 
 namespace BH.Api
 {
@@ -66,9 +67,10 @@ namespace BH.Api
 
             services.AddTransient<ITicketsService, TicketsService>();
             services.AddTransient<IMachinesService, MachinesService>();
+            services.AddTransient<IProfilesService, ProfilesService>();
 
             services.AddTransient<ITicketsRepository, TicketsRepository>();
-            services.AddTransient<IProfileRepository, ProfileRepository>();
+            services.AddTransient<IProfilesRepository, ProfilesRepository>();
             services.AddTransient<IMachinesRepository, MachinesRepository>();
         }
 

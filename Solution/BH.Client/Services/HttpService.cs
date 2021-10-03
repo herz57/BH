@@ -60,6 +60,12 @@ namespace BH.Client.Services
             return await GetAsync<PlayResponseDto>(uri);
         }
 
+        public async Task<ApiResponse<long>> GetProfileBalanceAsync()
+        {
+            var uri = new Uri($"{_httpClient.BaseAddress}/profiles");
+            return await GetAsync<long>(uri);
+        }
+
         public async Task<ApiResponse<LockMachineDto>> LockMachineAsync(DomainType domainType)
         {
             var uri = new Uri($"{_httpClient.BaseAddress}/machines/{domainType}");
@@ -68,7 +74,7 @@ namespace BH.Client.Services
 
         #region private
 
-        private async Task<ApiResponse<TOut>> GetAsync<TOut>(Uri uri) where TOut : class
+        private async Task<ApiResponse<TOut>> GetAsync<TOut>(Uri uri)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
             return await SendAsync<TOut>(request);

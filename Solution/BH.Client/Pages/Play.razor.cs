@@ -17,56 +17,68 @@ namespace BH.Client.Pages
         private IHttpService HttpService { get; set; }
 
         private bool isLoading;
-        private PlayResponseDto playResponse;
+        private bool[] showSymbols;
         private List<List<string>> symbolsPathes;
-        private bool[] showSymbols = new bool[3];
-        private List<int> availableCosts = new List<int>();
-        private IEnumerable<DomainType> availableDomainTypes = Enum.GetValues(typeof(DomainType)).Cast<DomainType>();
-
-        private DomainType selectedDomain;
-        private int selectedCost;
+        private List<int> availableCosts;
+        private IEnumerable<DomainType> availableDomainTypes;
+        private PlayResponseDto playResponse;
         private int selectedMachine;
+        private long profileBalance;
+
+        public DomainType SelectedDomain { get; set; }
+
+        public int SelectedCost { get; set; }
+
+        public Play()
+        {
+            availableDomainTypes = Enum.GetValues(typeof(DomainType)).Cast<DomainType>();
+            availableCosts = new List<int>();
+            showSymbols = new bool[3];
+        }
 
         protected override async Task OnInitializedAsync()
         {
+            await InitProfileBalanceAsync();
+        }
+
+        protected override Task OnAfterRenderAsync(bool firstRender)
+        {
+            return base.OnAfterRenderAsync(firstRender);
+        }
+
+        private async Task InitProfileBalanceAsync()
+        {
+            isLoading = true;
+            var response = await HttpService.GetProfileBalanceAsync();
+            isLoading = false;
+
+            if (!response.IsSuccess)
+                return;
+
+            profileBalance = response.Content;
         }
 
         private async Task OnPlayClick()
         {
             isLoading = true;
             ResetShowSymbolsFlags();
-            selectedDomain = DomainType.Third;
 
-            var response = await HttpService.GetTicketAsync(selectedMachine, selectedCost);
+            var response = await HttpService.GetTicketAsync(selectedMachine, SelectedCost);
             isLoading = false;
 
             if (!response.IsSuccess)
                 return;
 
             SetSymbolsInfo(response.Content.Symbols);
+            profileBalance = response.Content.ProfileBalance;
             playResponse = response.Content;
             HandleSymbolsShowingTimeout();
         }
 
-        private void OnCostChange(ChangeEventArgs e)
+        private async Task InitMachineAsync()
         {
-            selectedCost = Convert.ToInt32(e.Value);
-        }
-
-        private async Task OnDomainChange(ChangeEventArgs e)
-        {
-            var domainType = (DomainType)Convert.ToInt32(e.Value);
-            selectedDomain = domainType;
-            await InitMachineAsync(domainType);
-        }
-
-        private async Task InitMachineAsync(DomainType domainType)
-        {
-            if (isLoading)
-                return;
-
             isLoading = true;
-            var response = await HttpService.LockMachineAsync(domainType);
+            var response = await HttpService.LockMachineAsync(SelectedDomain);
             isLoading = false;
 
             if (!response.IsSuccess)
@@ -74,6 +86,12 @@ namespace BH.Client.Pages
 
             selectedMachine = response.Content.MachineId;
             availableCosts = response.Content.AvailableCosts;
+        }
+
+        private async Task OnDomainChange(ChangeEventArgs e)
+        {
+            SelectedDomain = (DomainType)Enum.Parse(typeof(DomainType), e.Value.ToString());
+            await InitMachineAsync();
         }
 
         private void SetSymbolsInfo(string symbolsJson)
@@ -91,7 +109,7 @@ namespace BH.Client.Pages
 
         private string GetSymbolPath(string symbol)
         {
-            return selectedDomain switch
+            return SelectedDomain switch
             {
                 DomainType.First => $"../css/img/futurama/{symbol}.png",
                 DomainType.Second => $"../css/img/naruto/{symbol}.png",
