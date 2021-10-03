@@ -10,72 +10,106 @@
 }
 else
 {
-    <select value="@SelectedDomain" @onchange="@OnDomainChange" class="form-control">
-        @foreach (var domainType in availableDomainTypes)
-        {
-            <option value=@(domainType)>@domainType.GetEnumDescription()</option>
-        }
-    </select>
-    <select @bind="SelectedCost">
-        @foreach (var cost in availableCosts)
-        {
-            <option value=@cost>@cost</option>
-        }
-    </select>
-
-    <h2>Balance: @profileBalance uah.</h2>
-
-    if (playResponse != null)
+    <h4>Balance: @profileBalance uah.</h4>
+    <div class="form-froup">
+        <label for="domain">Domain</label>
+        <select value="@SelectedDomain" @onchange="@OnDomainChange" class="form-control" id="domain">
+            @foreach (var domainType in availableDomainTypes)
+            {
+                <option value=@domainType>@domainType.GetEnumDescription()</option>
+            }
+        </select>
+    </div>
+    if (selectedMachine != null)
     {
-        <h2>You win @playResponse.Win uah.</h2>
-        <table class="table play-table">
-            <tbody>
-                <tr>
-                    @if (showSymbols[0])
-                    {
-                        <td><img src="@symbolsPathes[0][0]" /></td>
-                    }
-                    @if (showSymbols[1])
-                    {
-                        <td><img src="@symbolsPathes[1][0]" /></td>
-                    }
-                    @if (showSymbols[2])
-                    {
-                        <td><img src="@symbolsPathes[2][0]" /></td>
-                    }
-                </tr>
-                <tr>
-                    @if (showSymbols[0])
-                    {
-                        <td><img src="@symbolsPathes[0][1]" /></td>
-                    }
-                    @if (showSymbols[1])
-                    {
-                        <td><img src="@symbolsPathes[1][1]" /></td>
-                    }
-                    @if (showSymbols[2])
-                    {
-                        <td><img src="@symbolsPathes[2][1]" /></td>
-                    }
-                </tr>
-                <tr>
-                    @if (showSymbols[0])
-                    {
-                        <td><img src="@symbolsPathes[0][2]" /></td>
-                    }
-                    @if (showSymbols[1])
-                    {
-                        <td><img src="@symbolsPathes[1][2]" /></td>
-                    }
-                    @if (showSymbols[2])
-                    {
-                        <td><img src="@symbolsPathes[2][2]" /></td>
-                    }
-                </tr>
-            </tbody>
-        </table>
+        <div class="form-froup">
+            <label for="cost">Cost</label>
+            <select @bind="SelectedCost" class="form-control" id="cost">
+                @foreach (var cost in availableCosts)
+                {
+                    <option value=@cost>@cost</option>
+                }
+            </select>
+        </div>
     }
 
+    <button @onclick="OnPlayClick" class="btn btn-primary">Play</button>
+
+    if (playResponse != null && showSymbols[0])
+    {
+        <div class="play-table">
+            <h4 class="@(showSymbols[2] ? "visible" : "invisible")">You won @playResponse.Win uah.</h4>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>
+                            @if (showSymbols[0])
+                            {
+                                <img src="@symbolsPathes[0][0]" />
+                            }
+                        </td>
+
+                        <td>
+                            @if (showSymbols[1])
+                            {
+                                <img src="@symbolsPathes[1][0]" />
+                            }
+                        </td>
+
+                        <td>
+                            @if (showSymbols[2])
+                            {
+                                <img src="@symbolsPathes[2][0]" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @if (showSymbols[0])
+                            {
+                                <img src="@symbolsPathes[0][1]" />
+                            }
+                        </td>
+
+                        <td>
+                            @if (showSymbols[1])
+                            {
+                                <img src="@symbolsPathes[1][1]" />
+                            }
+                        </td>
+
+                        <td>
+                            @if (showSymbols[2])
+                            {
+                                <img src="@symbolsPathes[2][1]" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @if (showSymbols[0])
+                            {
+                                <img src="@symbolsPathes[0][2]" />
+                            }
+                        </td>
+
+                        <td>
+                            @if (showSymbols[1])
+                            {
+                                <img src="@symbolsPathes[1][2]" />
+                            }
+                        </td>
+
+                        <td>
+                            @if (showSymbols[2])
+                            {
+                                <img src="@symbolsPathes[2][2]" />
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
 }
-<button @onclick="OnPlayClick" class="play-btn">Play</button>
 

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using BH.Common.Enums;
 using System;
 using System.Linq;
+using System.Threading;
 
 namespace BH.Client.Pages
 {
@@ -22,7 +23,7 @@ namespace BH.Client.Pages
         private List<int> availableCosts;
         private IEnumerable<DomainType> availableDomainTypes;
         private PlayResponseDto playResponse;
-        private int selectedMachine;
+        private int? selectedMachine;
         private long profileBalance;
 
         public DomainType SelectedDomain { get; set; }
@@ -63,7 +64,7 @@ namespace BH.Client.Pages
             isLoading = true;
             ResetShowSymbolsFlags();
 
-            var response = await HttpService.GetTicketAsync(selectedMachine, SelectedCost);
+            var response = await HttpService.GetTicketAsync((int)selectedMachine, SelectedCost);
             isLoading = false;
 
             if (!response.IsSuccess)
@@ -111,20 +112,25 @@ namespace BH.Client.Pages
         {
             return SelectedDomain switch
             {
-                DomainType.First => $"../css/img/futurama/{symbol}.png",
-                DomainType.Second => $"../css/img/naruto/{symbol}.png",
-                DomainType.Third => $"../css/img/star wars/{symbol}.png",
+                DomainType.First => $"../css/img/star wars/{symbol}.png",
+                DomainType.Second => $"../css/img/futurama/{symbol}.png",
+                DomainType.Third => $"../css/img/naruto/{symbol}.png",
                 _ => throw new ArgumentException(),
             };
         }
 
         private async Task HandleSymbolsShowingTimeout()
         {
-            showSymbols[0] = true;
-            //await Task.Delay(1);
-            showSymbols[1] = true;
-            //await Task.Delay(1);
-            showSymbols[2] = true;
+            await HandleTimeout(0);
+            await HandleTimeout(1);
+            await HandleTimeout(2);
+
+            async Task HandleTimeout(int index)
+            {
+                await Task.Delay(300);
+                showSymbols[index] = true;
+                StateHasChanged();
+            }
         }
 
         private void ResetShowSymbolsFlags()
