@@ -1,8 +1,8 @@
 ﻿using BH.Common.Enums;
 using BH.Domain.Entities;
 using BH.Domain.Interfaces;
-using Domain;
-using Domain.Repositories.Base;
+using BH.Domain;
+using BH.Domain.Repositories.Base;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -34,6 +34,32 @@ namespace BH.Domain.Repositories
 
             await Context.Database.ExecuteSqlRawAsync(query, parms);
             return (int)machineId.Value;
+        }
+
+        public async Task UnlockMachineAsync(int machineId, string userId)
+        {
+            var query = @"update m set LockedByUserId = null
+                from dbo.Machines m
+                inner join dbo.AspNetUsers u on u.Id = m.LockedByUserId
+                where u.Id = @userId and m.MachineId = @machineId";
+
+            var parms = new List<SqlParameter>
+            {
+                new SqlParameter { ParameterName = "@userId", Value = userId },
+                new SqlParameter { ParameterName = "@machineId", Value = machineId }
+            };
+
+            await Context.Database.ExecuteSqlRawAsync(query, parms);
+        }
+
+        public async Task UnlockMachinesAsync()
+        {
+            var query = @"update m set LockedByUserId = null
+                from dbo.Machines m
+                inner join dbo.Tickets t on t.MachineId = m.MachineId
+                where LockedByUserId is not null and t.PlayedOutDate < dateadd(minute, -2, getutcdate())";
+
+            await Context.Database.ExecuteSqlRawAsync(query);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using BH.Domain.Entities;
 using BH.Domain.Interfaces;
-using Domain;
-using Domain.Repositories.Base;
+using BH.Domain;
+using BH.Domain.Repositories.Base;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;

@@ -3,7 +3,7 @@ using BH.Domain.Entities;
 using BH.Domain.Interfaces;
 using BH.Infrastructure.Exceptions;
 using BH.Infrastructure.Interfaces;
-using Domain.Interfaces;
+using BH.Domain.Interfaces;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 

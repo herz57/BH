@@ -3,7 +3,6 @@ using BH.Common.Enums;
 using BH.Domain.Interfaces;
 using BH.Infrastructure.Exceptions;
 using BH.Infrastructure.Interfaces;
-using Domain.Interfaces;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -15,7 +14,8 @@ namespace Infrastructure.Services
         private readonly ITicketsRepository _ticketsRepository;
 
         public MachinesService(IMachinesRepository machinesRepository,
-            ITicketsRepository ticketsRepository)
+            ITicketsRepository ticketsRepository
+            )
         {
             _machinesRepository = machinesRepository;
             _ticketsRepository = ticketsRepository;
@@ -36,6 +36,11 @@ namespace Infrastructure.Services
             {
                 throw new ApiHandledException(ex.Message);
             }
+        }
+
+        public async Task UnlockMachineAsync(int machineId, string userId)
+        {
+            await _machinesRepository.UnlockMachineAsync(machineId, userId);
         }
     }
 }

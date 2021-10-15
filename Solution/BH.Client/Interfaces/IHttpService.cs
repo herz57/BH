@@ -19,6 +19,8 @@ namespace BH.Client.Interfaces
 
         Task<ApiResponse<LockMachineDto>> LockMachineAsync(DomainType domainType);
 
+        Task<ApiResponse> UnlockMachineAsync(int machineId);
+
         Task<ApiResponse<long>> GetProfileBalanceAsync();
     }
 }

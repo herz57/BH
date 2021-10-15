@@ -1,6 +1,6 @@
 ﻿using BH.Common.Consts;
 using BH.Domain.Entities;
-using Domain;
+using BH.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

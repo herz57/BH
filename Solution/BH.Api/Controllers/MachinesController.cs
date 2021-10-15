@@ -25,11 +25,19 @@ namespace BH.Api.Controllers
         }
 
         [Authorize]
-        [HttpPost("{domainType}")]
+        [HttpPost("lock/{domainType}")]
         public async Task<IActionResult> LockMachineAsync([FromRoute] DomainType domainType)
         {
             var result = await _machineService.LockMachineAsync(CurrentUser.Id, domainType);
             return Ok(new ApiResponse<LockMachineDto>(result));
+        }
+
+        [Authorize]
+        [HttpPost("unlock/{machineId}")]
+        public async Task<IActionResult> UnlockMachineAsync([FromRoute] int machineId)
+        {
+            await _machineService.UnlockMachineAsync(machineId, CurrentUser.Id);
+            return Ok(new ApiResponse());
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using System.Runtime;
 using System.Linq.Expressions;
 
-namespace Domain.Interfaces
+namespace BH.Domain.Interfaces
 {
     public interface IBaseRepository<TEntity>
     {

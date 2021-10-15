@@ -7,5 +7,7 @@ namespace BH.Infrastructure.Interfaces
     public interface IMachinesService
     {
         Task<LockMachineDto> LockMachineAsync(string userId, DomainType domainType);
+
+        Task UnlockMachineAsync(int machineId, string userId);
     }
 }

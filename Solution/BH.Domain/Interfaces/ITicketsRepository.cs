@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Domain.Interfaces
+namespace BH.Domain.Interfaces
 {
     public interface ITicketsRepository : IBaseRepository<Ticket>
     {

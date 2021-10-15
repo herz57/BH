@@ -1,8 +1,8 @@
 using BH.Infrastructure.Interfaces;
-using Domain;
+using BH.Domain;
 using BH.Domain.Entities;
-using Domain.Interfaces;
-using Domain.Repositories;
+using BH.Domain.Interfaces;
+using BH.Domain.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using BH.Domain.Seed;
 using System;
 using Microsoft.AspNetCore.Http;
@@ -45,8 +44,9 @@ namespace BH.Api
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.Cookie.Name = "AuthCookie";
-                options.ExpireTimeSpan = TimeSpan.FromHours(24);
+                var cookieSettings = Configuration.GetSection("Cookies");
+                options.Cookie.Name = cookieSettings.GetValue<string>("Name");
+                options.ExpireTimeSpan = TimeSpan.FromHours(cookieSettings.GetValue<int>("ExpireTimeSpan"));
                 options.Events.OnRedirectToLogin = context =>
                 {
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;

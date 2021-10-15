@@ -17,6 +17,8 @@ namespace BH.Client.Pages
         [Inject]
         private IHttpService HttpService { get; set; }
 
+        protected bool IsDisabled { get; set; } = true;
+
         private bool isLoading;
         private bool[] showSymbols;
         private List<List<string>> symbolsPathes;
@@ -61,6 +63,9 @@ namespace BH.Client.Pages
 
         private async Task OnPlayClick()
         {
+            if (!selectedMachine.HasValue || SelectedCost == default)
+                return;
+
             isLoading = true;
             ResetShowSymbolsFlags();
 
@@ -89,9 +94,21 @@ namespace BH.Client.Pages
             availableCosts = response.Content.AvailableCosts;
         }
 
+        private async Task UnlockMachineAsync(int machineId)
+        {
+            isLoading = true;
+            await HttpService.UnlockMachineAsync(machineId);
+            isLoading = false;
+        }
+
         private async Task OnDomainChange(ChangeEventArgs e)
         {
+            var oldDomain = SelectedDomain;
             SelectedDomain = (DomainType)Enum.Parse(typeof(DomainType), e.Value.ToString());
+            if (oldDomain != default && oldDomain != SelectedDomain && selectedMachine.HasValue)
+            {
+                await UnlockMachineAsync((int)selectedMachine);
+            }
             await InitMachineAsync();
         }
 

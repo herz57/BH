@@ -68,8 +68,14 @@ namespace BH.Client.Services
 
         public async Task<ApiResponse<LockMachineDto>> LockMachineAsync(DomainType domainType)
         {
-            var uri = new Uri($"{_httpClient.BaseAddress}/machines/{domainType}");
+            var uri = new Uri($"{_httpClient.BaseAddress}/machines/lock/{domainType}");
             return await PostAsync<LockMachineDto>(uri);
+        }
+
+        public async Task<ApiResponse> UnlockMachineAsync(int machineId)
+        {
+            var uri = new Uri($"{_httpClient.BaseAddress}/machines/unlock/{machineId}");
+            return await PostAsync(uri);
         }
 
         #region private

@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Domain
+namespace BH.Domain
 {
     public class BhDbContext : IdentityDbContext<User>
     {

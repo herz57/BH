@@ -1,13 +1,13 @@
 ﻿using BH.Domain.Entities;
-using Domain.Interfaces;
-using Domain.Repositories.Base;
+using BH.Domain.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Linq;
+using BH.Domain.Interfaces;
 
-namespace Domain.Repositories
+namespace BH.Domain.Repositories
 {
     public class TicketsRepository : BaseRepository<Ticket>, ITicketsRepository
     {

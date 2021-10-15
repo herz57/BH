@@ -6,5 +6,9 @@ namespace BH.Domain.Interfaces
     public interface IMachinesRepository
     {
         Task<int> LockMachineAsync(string userId, DomainType domainType);
+
+        Task UnlockMachineAsync(int machineId, string userId);
+
+        Task UnlockMachinesAsync();
     }
 }

@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace BH.Domain.Entities
 {
     public class Ticket
@@ -11,7 +12,7 @@ namespace BH.Domain.Entities
 
         public int Win { get; set; }
 
-        public bool PlayedOut { get; set; }
+        public DateTime? PlayedOutDate { get; set; }
 
         public string Symbols { get; set; }
 
