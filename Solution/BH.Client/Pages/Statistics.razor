@@ -1,0 +1,36 @@
+﻿@page "/statistics"
+
+<link href="./css/pages/play.css" rel="stylesheet" />
+
+<div class="play-table">
+    <h4>Users Statistics</h4>
+    <div class="input-group mb-3 col-6">
+        <input type="text" class="form-control" placeholder="For days" value=@forDays @oninput="OnDaysInput" />
+    </div>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Username</th>
+                <th>Tickets bought</th>
+                <th>Total win</th>
+                <th>Spent</th>
+            </tr>
+            @if (isLoading)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                @foreach (var statistic in UsersStatistics)
+                {
+                    <tr>
+                        <td>@statistic.UserName</td>
+                        <td>@statistic.TotalTickets</td>
+                        <td>@statistic.TotalWin</td>
+                        <td>@statistic.TotalCost</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

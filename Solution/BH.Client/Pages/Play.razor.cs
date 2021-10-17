@@ -8,11 +8,10 @@ using System.Collections.Generic;
 using BH.Common.Enums;
 using System;
 using System.Linq;
-using System.Threading;
 
 namespace BH.Client.Pages
 {
-    public partial class Play
+    public partial class Play : IDisposable
     {
         [Inject]
         private IHttpService HttpService { get; set; }
@@ -37,6 +36,11 @@ namespace BH.Client.Pages
             availableDomainTypes = Enum.GetValues(typeof(DomainType)).Cast<DomainType>();
             availableCosts = new List<int>();
             showSymbols = new bool[3];
+        }
+
+        public async void Dispose()
+        {
+            await UnlockMachineAsync();
         }
 
         protected override async Task OnInitializedAsync()
@@ -94,10 +98,10 @@ namespace BH.Client.Pages
             availableCosts = response.Content.AvailableCosts;
         }
 
-        private async Task UnlockMachineAsync(int machineId)
+        private async Task UnlockMachineAsync()
         {
             isLoading = true;
-            await HttpService.UnlockMachineAsync(machineId);
+            await HttpService.UnlockMachineAsync((int)selectedMachine);
             isLoading = false;
         }
 
@@ -107,7 +111,7 @@ namespace BH.Client.Pages
             SelectedDomain = (DomainType)Enum.Parse(typeof(DomainType), e.Value.ToString());
             if (oldDomain != default && oldDomain != SelectedDomain && selectedMachine.HasValue)
             {
-                await UnlockMachineAsync((int)selectedMachine);
+                await UnlockMachineAsync();
             }
             await InitMachineAsync();
         }

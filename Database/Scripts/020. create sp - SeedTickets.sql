@@ -78,6 +78,6 @@ begin
 		set @counter = @counter - 1;
 
 		declare @symbols varchar(100) = (select top(1) Symbols from @winSymbolsMap where WinMultiplier = @winMultiplier order by newid());
-		insert into Tickets (MachineId, Cost, Win, Symbols, PlayedOutDate) values (@machineId, @cost, @win, @symbols, null);
+		insert into Tickets (MachineId, Cost, Win, Symbols, PlayedOut) values (@machineId, @cost, @win, @symbols, 0);
 	end
 end

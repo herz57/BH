@@ -6,6 +6,8 @@ using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Linq;
 using BH.Domain.Interfaces;
+using BH.Common.Models;
+using BH.Domain.Extensions;
 
 namespace BH.Domain.Repositories
 {
@@ -54,6 +56,15 @@ namespace BH.Domain.Repositories
                 .FromSqlRaw(query, param)
                 .Select(t => t.Cost)
                 .ToListAsync();
+        }
+
+        public IList<UserStatistic> GetUsersStatistics(int forDays)
+        {
+            var result = Context.LoadStoredProc("dbo.GetUsersStatistics")
+               .WithSqlParam("forDays", forDays)
+               .ExecuteStoredProc<UserStatistic>();
+
+            return result;
         }
     }
 }

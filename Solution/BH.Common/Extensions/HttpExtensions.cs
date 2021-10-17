@@ -7,7 +7,7 @@ namespace BH.Common.Extensions
     {
         public static Uri AddQuery(this Uri uri, string key, string value)
         {
-            if (value == null)
+            if (string.IsNullOrEmpty(value))
                 return uri;
 
             var httpValueCollection = HttpUtility.ParseQueryString(uri.Query);

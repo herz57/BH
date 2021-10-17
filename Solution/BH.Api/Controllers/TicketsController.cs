@@ -5,6 +5,7 @@ using BH.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 
@@ -29,6 +30,14 @@ namespace BH.Api.Controllers
         {
             var result = await _ticketsService.PlayAsync(CurrentUser, machineId, ticketCost); 
             return Ok(new ApiResponse<PlayResponseDto>(result));
+        }
+
+        [Authorize]
+        [HttpGet("statistics")]
+        public IActionResult GetUsersStatistics([FromQuery] int forDays = 30)
+        {
+            var result = _ticketsService.GetUsersStatistics(forDays);
+            return Ok(new ApiResponse<IList<UserStatistic>>(result));
         }
     }
 }

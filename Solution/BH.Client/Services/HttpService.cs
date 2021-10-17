@@ -60,6 +60,14 @@ namespace BH.Client.Services
             return await GetAsync<PlayResponseDto>(uri);
         }
 
+        public async Task<ApiResponse<IList<UserStatistic>>> GetUsersStatisticsAsync(string forDays)
+        {
+            var uri = new Uri($"{_httpClient.BaseAddress}/tickets/statistics")
+                .AddQuery("forDays", forDays);
+
+            return await GetAsync<IList<UserStatistic>>(uri);
+        }
+
         public async Task<ApiResponse<long>> GetProfileBalanceAsync()
         {
             var uri = new Uri($"{_httpClient.BaseAddress}/profiles");

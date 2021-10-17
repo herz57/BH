@@ -1,6 +1,5 @@
 ﻿using BH.Common.Consts;
 using BH.Domain.Entities;
-using BH.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +32,6 @@ namespace BH.Domain.Seed
                 var users = await CreateUsersAsync();
                 await CreateRolesAsync();
                 await AsignRolesToUsersAsync(users);
-                await CreateProfilesAsync(users);
                 await transaction.CommitAsync();
             }
         }
@@ -69,12 +67,6 @@ namespace BH.Domain.Seed
             await _userManager.AddToRoleAsync(user2, Consts.Roles.Admin);
         }
 
-        private async Task CreateProfilesAsync(List<User> users)
-        {
-            var profiles = ComposeProfiles(users);
-            await _context.Profiles.AddRangeAsync(profiles);
-        }
-
         #region Composers
 
         private ICollection<User> ComposeUsers()
@@ -107,21 +99,6 @@ namespace BH.Domain.Seed
                     Name = Consts.Roles.User
                 }
             };
-        }
-
-        private ICollection<Profile> ComposeProfiles(List<User> users)
-        {
-            var profiles = new List<Profile>();
-
-            foreach (var user in users)
-            {
-                profiles.Add(new Profile
-                {
-                    UserId = user.Id
-                });
-            }
-
-            return profiles;
         }
 
         #endregion

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace BH.Domain.Entities
 {
@@ -12,11 +12,12 @@ namespace BH.Domain.Entities
 
         public int Win { get; set; }
 
-        public DateTime? PlayedOutDate { get; set; }
+        public bool PlayedOut { get; set; }
 
         public string Symbols { get; set; }
 
-
         public Machine Machine { get; set; }
+
+        public virtual IList<TicketHistory> TicketHistories { get; set; } = new List<TicketHistory>();
     }
 }

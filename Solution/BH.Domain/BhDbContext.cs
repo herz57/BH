@@ -19,6 +19,9 @@ namespace BH.Domain
 
         public DbSet<Profile> Profiles { get; set; }
 
+        public DbSet<TicketHistory> TicketHistories { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var typeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type =>

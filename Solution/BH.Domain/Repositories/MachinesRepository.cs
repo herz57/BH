@@ -57,7 +57,8 @@ namespace BH.Domain.Repositories
             var query = @"update m set LockedByUserId = null
                 from dbo.Machines m
                 inner join dbo.Tickets t on t.MachineId = m.MachineId
-                where LockedByUserId is not null and t.PlayedOutDate < dateadd(minute, -2, getutcdate())";
+                inner join dbo.TicketHistories th on th.TicketId = t.TicketId
+                where LockedByUserId is not null and th.PlayedOutDate < dateadd(minute, -2, getutcdate())";
 
             await Context.Database.ExecuteSqlRawAsync(query);
         }

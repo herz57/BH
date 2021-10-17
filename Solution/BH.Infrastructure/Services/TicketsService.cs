@@ -3,9 +3,10 @@ using BH.Domain.Entities;
 using BH.Domain.Interfaces;
 using BH.Infrastructure.Exceptions;
 using BH.Infrastructure.Interfaces;
-using BH.Domain.Interfaces;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using BH.Common.Models;
 
 namespace Infrastructure.Services
 {
@@ -33,6 +34,19 @@ namespace Infrastructure.Services
                     ProfileBalance = await _profileRepository.GetBalanceAsync(currentUser.Profile.ProfileId),
                     Symbols = result.Symbols,
                 };
+            }
+            catch (SqlException ex)
+            {
+                throw new ApiHandledException(ex.Message);
+            }
+        }
+
+        public IList<UserStatistic> GetUsersStatistics(int forDays)
+        {
+            try
+            {
+                var result = _ticketRepository.GetUsersStatistics(forDays);
+                return result;
             }
             catch (SqlException ex)
             {

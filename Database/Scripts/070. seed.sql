@@ -2,8 +2,8 @@ use BH;
 
 -- Domains seed
 insert into [Domains] (DomainType, Description) values 
-	(1, 'Star Wars'), 
-	(2, 'Naruto'), 
+	(1, 'Languages'), 
+	(2, 'Metal'), 
 	(3, 'Futurama');
 
 -- Mashines seed
@@ -30,6 +30,6 @@ begin
 	fetch next from @cursor into @machineId;
 end
 
-close @cursor ;
+close @cursor;
 deallocate @cursor;
 

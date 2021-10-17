@@ -11,6 +11,8 @@ namespace BH.Client.Interfaces
     {
         Task<ApiResponse<PlayResponseDto>> GetTicketAsync(int machineId, int ticketCost);
 
+        Task<ApiResponse<IList<UserStatistic>>> GetUsersStatisticsAsync(string forDays);
+
         Task<ApiResponse> LoginAsync(LoginDto dto);
 
         Task<ApiResponse> LogoutAsync();

@@ -25,7 +25,6 @@ namespace BH.Client.Pages
 
         public async Task LoginAsync()
         {
-            LoginData.UserName = "vasya1";
             var navigateUrl = HttpUtility.ParseQueryString(Navigation.Uri).Get("returnUrl") ?? Consts.Pages.Play;
             await AuthenticationStateProvider.SignInAsync(LoginData);
             Navigation.NavigateTo(navigateUrl);

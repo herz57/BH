@@ -12,17 +12,20 @@ create proc [dbo].[LockMachine]
 as 
 	declare @selectedMachineId int;
 
+	if (exists (select top(1) * from dbo.Machines m where m.LockedByUserId = @userId))
+		throw 51000, 'only one machine is available for simultaneous use', 0;
+
 	select top(1) @machineId = ag.MachineId from 
 	(
 		select t.Cost, m.MachineId from dbo.Machines m 
 		inner join dbo.Tickets t on t.MachineId = m.MachineId
-		where m.DomainType = @domainType and t.PlayedOutDate is null and m.LockedByUserId is null
+		where m.DomainType = @domainType and t.PlayedOut = 0 and m.LockedByUserId is null
 		group by t.Cost, m.MachineId
 	) ag
 	group by ag.MachineId
 	order by count(ag.MachineId) desc
 
 	if (@machineId is null)
-		raiserror('there are not available machines', 16, 1);
+		throw 51000, 'there are not available machines', 0;
 
 	update dbo.Machines set LockedByUserId = @userId where MachineId = @machineId

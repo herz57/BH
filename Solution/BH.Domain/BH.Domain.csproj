@@ -21,8 +21,4 @@
     <ProjectReference Include="..\BH.Common\BH.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

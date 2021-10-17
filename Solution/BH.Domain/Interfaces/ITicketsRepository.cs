@@ -1,4 +1,5 @@
-﻿using BH.Domain.Entities;
+﻿using BH.Common.Models;
+using BH.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,5 +12,7 @@ namespace BH.Domain.Interfaces
         Task<List<int>> GetAvailableMachineCosts(int machineId);
 
         Task<Ticket> GetTicketByIdAsync(int ticketId);
+
+        IList<UserStatistic> GetUsersStatistics(int forDays);
     }
 }
