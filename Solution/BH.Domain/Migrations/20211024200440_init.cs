@@ -59,6 +59,25 @@ namespace BH.Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Logs",
+                columns: table => new
+                {
+                    LogId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EntityId = table.Column<int>(nullable: true),
+                    EntityDiscriminator = table.Column<string>(nullable: true),
+                    Level = table.Column<int>(nullable: false),
+                    Message = table.Column<string>(nullable: true),
+                    Exception = table.Column<string>(nullable: true),
+                    Date = table.Column<DateTime>(nullable: true, defaultValueSql: "getutcdate()"),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Logs", x => x.LogId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -220,7 +239,6 @@ namespace BH.Domain.Migrations
                     Cost = table.Column<int>(nullable: false),
                     Win = table.Column<int>(nullable: false),
                     PlayedOut = table.Column<bool>(nullable: false),
-                    PlayedOutDate = table.Column<DateTime>(nullable: true),
                     Symbols = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -231,25 +249,6 @@ namespace BH.Domain.Migrations
                         column: x => x.MachineId,
                         principalTable: "Machines",
                         principalColumn: "MachineId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TicketHistories",
-                columns: table => new
-                {
-                    TicketId = table.Column<int>(nullable: false),
-                    PlayedOutDate = table.Column<DateTime>(nullable: false),
-                    PlayedOutByUserId = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TicketHistories", x => new { x.TicketId, x.PlayedOutDate, x.PlayedOutByUserId });
-                    table.ForeignKey(
-                        name: "FK_TicketHistories_Tickets_TicketId",
-                        column: x => x.TicketId,
-                        principalTable: "Tickets",
-                        principalColumn: "TicketId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -291,6 +290,11 @@ namespace BH.Domain.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Logs_EntityDiscriminator",
+                table: "Logs",
+                column: "EntityDiscriminator");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Machines_DomainType",
@@ -335,16 +339,16 @@ namespace BH.Domain.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Logs");
+
+            migrationBuilder.DropTable(
                 name: "Profiles");
 
             migrationBuilder.DropTable(
-                name: "TicketHistories");
+                name: "Tickets");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Tickets");
 
             migrationBuilder.DropTable(
                 name: "Machines");

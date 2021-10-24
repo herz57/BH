@@ -1,11 +1,10 @@
 ﻿using BH.Api.Controllers.Base;
-using BH.Common.Dtos;
 using BH.Common.Models;
+using BH.Domain.Entities;
 using BH.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 
@@ -26,18 +25,30 @@ namespace BH.Api.Controllers
 
         [Authorize]
         [HttpGet("{machineId}")]
-        public async Task<IActionResult> PlayAsync([FromRoute]int machineId, [FromQuery] int ticketCost)
+        public Task<ApiResponse> PlayAsync([FromRoute]int machineId, [FromQuery] int ticketCost)
         {
-            var result = await _ticketsService.PlayAsync(CurrentUser, machineId, ticketCost); 
-            return Ok(new ApiResponse<PlayResponseDto>(result));
+            return Handle(
+                async () =>
+                {
+                    var result = await _ticketsService.PlayAsync(CurrentUser, machineId, ticketCost);
+                    return result;
+                },
+                nameof(PlayAsync),
+                nameof(Machine),
+                machineId);
         }
 
         [Authorize]
         [HttpGet("statistics")]
-        public IActionResult GetUsersStatistics([FromQuery] int forDays = 30)
+        public Task<ApiResponse> GetUsersStatistics([FromQuery] int forDays = 30)
         {
-            var result = _ticketsService.GetUsersStatistics(forDays);
-            return Ok(new ApiResponse<IList<UserStatistic>>(result));
+            return Handle(
+                async () =>
+                {
+                    var result = _ticketsService.GetUsersStatistics(forDays);
+                    return result;
+                },
+                nameof(GetUsersStatistics));
         }
     }
 }

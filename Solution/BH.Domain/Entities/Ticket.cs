@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BH.Domain.Entities
+﻿namespace BH.Domain.Entities
 {
     public class Ticket
     {
@@ -17,7 +15,5 @@ namespace BH.Domain.Entities
         public string Symbols { get; set; }
 
         public Machine Machine { get; set; }
-
-        public virtual IList<TicketHistory> TicketHistories { get; set; } = new List<TicketHistory>();
     }
 }

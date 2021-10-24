@@ -1,7 +1,7 @@
 ﻿using BH.Api.Controllers.Base;
-using BH.Common.Dtos;
 using BH.Common.Enums;
 using BH.Common.Models;
+using BH.Domain.Entities;
 using BH.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,18 +26,30 @@ namespace BH.Api.Controllers
 
         [Authorize]
         [HttpPost("lock/{domainType}")]
-        public async Task<IActionResult> LockMachineAsync([FromRoute] DomainType domainType)
+        public Task<ApiResponse> LockMachineAsync([FromRoute] DomainType domainType)
         {
-            var result = await _machineService.LockMachineAsync(CurrentUser.Id, domainType);
-            return Ok(new ApiResponse<LockMachineDto>(result));
+            return Handle(
+                async () =>
+                {
+                    var result = await _machineService.LockMachineAsync(CurrentUser.Id, domainType);
+                    return result;
+                },
+                nameof(LockMachineAsync));
         }
 
         [Authorize]
         [HttpPost("unlock/{machineId}")]
-        public async Task<IActionResult> UnlockMachineAsync([FromRoute] int machineId)
+        public Task<ApiResponse> UnlockMachineAsync([FromRoute] int machineId)
         {
-            await _machineService.UnlockMachineAsync(machineId, CurrentUser.Id);
-            return Ok(new ApiResponse());
+            return Handle(
+                async () =>
+                {
+                    await _machineService.UnlockMachineAsync(machineId, CurrentUser.Id);
+                    return new ApiResponse();
+                },
+                nameof(UnlockMachineAsync),
+                nameof(Machine),
+                machineId);
         }
     }
 }

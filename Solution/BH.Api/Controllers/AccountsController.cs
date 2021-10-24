@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using BH.Common.Models;
 using BH.Api.Controllers.Base;
 using System;
-using System.Net;
 
 namespace BH.Api.Controllers
 {
@@ -27,32 +26,48 @@ namespace BH.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody]LoginDto dto)
+        public Task<ApiResponse> Login([FromBody]LoginDto dto)
         {
-            if (ModelState.IsValid)
-            {
-                var result = await _signInManager.PasswordSignInAsync(dto.UserName, dto.Password, true, false);
-                if (!result.Succeeded)
-                {
-                    ModelState.AddModelError(string.Empty, "Wrong login or password.");
-                }
-            }
-            return Ok(new ApiResponse());
+            return Handle(
+               async () =>
+               {
+                   if (ModelState.IsValid)
+                   {
+                       var result = await _signInManager.PasswordSignInAsync(dto.UserName, dto.Password, true, false);
+                       if (!result.Succeeded)
+                       {
+                           ModelState.AddModelError(string.Empty, "Wrong login or password.");
+                       }
+                   }
+                   return new ApiResponse();
+               },
+               nameof(GetUserClaims));
         }
 
         [Authorize]
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        public Task<ApiResponse> Logout()
         {
-            await _signInManager.SignOutAsync();
-            return Ok(new ApiResponse());
+            return Handle(
+              async () =>
+              {
+                  await _signInManager.SignOutAsync();
+                  return new ApiResponse();
+              },
+              nameof(GetUserClaims));
         }
 
         [Authorize]
         [HttpGet("claims")]
-        public IActionResult GetUserClaims()
+        public Task<ApiResponse> GetUserClaims()
         {
-            return Ok(new ApiResponse<List<ClaimValue>>(GetAllowedUserClaims()));
+            return Handle(
+               async () =>
+               {
+                   var result = GetAllowedUserClaims();
+                   return result;
+               },
+               nameof(GetUserClaims));
         }
 
         private List<ClaimValue> GetAllowedUserClaims()

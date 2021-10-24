@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BH.Domain.Migrations
 {
     [DbContext(typeof(BhDbContext))]
-    [Migration("20211017151040_init")]
+    [Migration("20211024200440_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,43 @@ namespace BH.Domain.Migrations
                     b.HasKey("DomainType");
 
                     b.ToTable("Domains");
+                });
+
+            modelBuilder.Entity("BH.Domain.Entities.Log", b =>
+                {
+                    b.Property<int>("LogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<string>("EntityDiscriminator")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Exception")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LogId");
+
+                    b.HasIndex("EntityDiscriminator");
+
+                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("BH.Domain.Entities.Machine", b =>
@@ -96,9 +133,6 @@ namespace BH.Domain.Migrations
                     b.Property<bool>("PlayedOut")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("PlayedOutDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Symbols")
                         .HasColumnType("nvarchar(max)");
 
@@ -110,22 +144,6 @@ namespace BH.Domain.Migrations
                     b.HasIndex("MachineId");
 
                     b.ToTable("Tickets");
-                });
-
-            modelBuilder.Entity("BH.Domain.Entities.TicketHistory", b =>
-                {
-                    b.Property<int>("TicketId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("PlayedOutDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PlayedOutByUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("TicketId", "PlayedOutDate", "PlayedOutByUserId");
-
-                    b.ToTable("TicketHistories");
                 });
 
             modelBuilder.Entity("BH.Domain.Entities.User", b =>
@@ -349,15 +367,6 @@ namespace BH.Domain.Migrations
                     b.HasOne("BH.Domain.Entities.Machine", "Machine")
                         .WithMany("Tickets")
                         .HasForeignKey("MachineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BH.Domain.Entities.TicketHistory", b =>
-                {
-                    b.HasOne("BH.Domain.Entities.Ticket", "Ticket")
-                        .WithMany("TicketHistories")
-                        .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

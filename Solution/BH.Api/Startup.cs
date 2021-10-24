@@ -14,9 +14,6 @@ using BH.Domain.Seed;
 using System;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
-using BH.Domain.Interfaces;
-using BH.Domain.Repositories;
-using BH.Api.Middlewares;
 using BH.Infrastructure.Services;
 
 namespace BH.Api
@@ -68,6 +65,7 @@ namespace BH.Api
             services.AddTransient<ITicketsService, TicketsService>();
             services.AddTransient<IMachinesService, MachinesService>();
             services.AddTransient<IProfilesService, ProfilesService>();
+            services.AddTransient<ILoggerService, LoggerService>();
 
             services.AddTransient<ITicketsRepository, TicketsRepository>();
             services.AddTransient<IProfilesRepository, ProfilesRepository>();
@@ -86,7 +84,6 @@ namespace BH.Api
             //    app.UseHsts();
             //}
 
-            app.UseMiddleware<ExceptionMiddleware>();
             app.UseRouting();
             app.UseCors(MyOrigins);
 

@@ -19,7 +19,7 @@ namespace BH.Domain
 
         public DbSet<Profile> Profiles { get; set; }
 
-        public DbSet<TicketHistory> TicketHistories { get; set; }
+        public DbSet<Log> Logs { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

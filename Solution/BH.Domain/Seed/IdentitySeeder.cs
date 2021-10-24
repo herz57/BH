@@ -64,7 +64,16 @@ namespace BH.Domain.Seed
             await _userManager.AddToRoleAsync(user1, Consts.Roles.User);
 
             var user2 = users.Single(u => u.UserName == "tolya2");
-            await _userManager.AddToRoleAsync(user2, Consts.Roles.Admin);
+            await _userManager.AddToRoleAsync(user2, Consts.Roles.User);
+
+            var user3 = users.Single(u => u.UserName == "fedya3");
+            await _userManager.AddToRoleAsync(user3, Consts.Roles.User);
+
+            var user4 = users.Single(u => u.UserName == "tolya2");
+            await _userManager.AddToRoleAsync(user4, Consts.Roles.Admin);
+
+            var user5 = users.Single(u => u.UserName == "fedya3");
+            await _userManager.AddToRoleAsync(user5, Consts.Roles.Admin);
         }
 
         #region Composers
@@ -82,6 +91,11 @@ namespace BH.Domain.Seed
                 {
                     UserName = "tolya2",
                     Email = "tolyapipkin@gmail.com"
+                },
+                new User
+                {
+                    UserName = "fedya3",
+                    Email = "fedyapopkin@gmail.com"
                 }
             };
         }

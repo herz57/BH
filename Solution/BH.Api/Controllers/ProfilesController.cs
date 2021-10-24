@@ -24,10 +24,15 @@ namespace BH.Api.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetBalanceAsync()
+        public Task<ApiResponse> GetBalanceAsync()
         {
-            var result = await _profilesService.GetBalanceAsync(CurrentUser.Profile.ProfileId);
-            return Ok(new ApiResponse<long>(result));
+            return Handle(
+                async () =>
+                {
+                    var result = await _profilesService.GetBalanceAsync(CurrentUser.Profile.ProfileId);
+                    return result;
+                },
+                nameof(GetBalanceAsync));
         }
     }
 }
