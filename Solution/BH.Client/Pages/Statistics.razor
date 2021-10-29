@@ -2,34 +2,64 @@
 
 <link href="./css/pages/play.css" rel="stylesheet" />
 
-<div class="play-table">
-    <h4>Users Statistics</h4>
-    <div class="input-group mb-3 col-6">
-        <input type="text" class="form-control" placeholder="For days" value=@forDays @oninput="OnDaysInput" />
+@if (MachinesState != null)
+{
+    <div>
+        <span class="mr-3"><b>Locked Machines: </b>@MachinesState.LockedMachinesCount</span>  
+        <span><b>Available Machines: </b>@MachinesState.AvailableMachinesCount</span>
     </div>
+}
+
+<div class="play-table mb-5">
+    <h4>Users Statistics</h4>
     <table class="table">
         <tbody>
             <tr>
-                <th>Username</th>
-                <th>Tickets bought</th>
-                <th>Total win</th>
-                <th>Spent</th>
+                <th scope="col"v>Username</th>
+                <th scope="col">Tickets bought</th>
+                <th scope="col">Total win</th>
+                <th scope="col">Spent</th>
             </tr>
-            @if (isLoading)
+            @foreach (var statistic in UsersStatistics)
             {
-                <p><em>Loading...</em></p>
+                <tr>
+                    <td>@statistic.UserName</td>
+                    <td>@statistic.TotalTickets</td>
+                    <td>@statistic.TotalWin</td>
+                    <td>@statistic.TotalCost</td>
+                </tr>
             }
-            else
+        </tbody>
+    </table>
+</div>
+<div>
+    <h4>Tickets</h4>
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th scope="col">LogId</th>
+                <th scope="col">UserName</th>
+                <th scope="col">Win</th>
+                <th scope="col">Cost</th>
+                <th scope="col">ProfileBalance</th>
+                <th scope="col">Message</th>
+                <th scope="col">Error</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var statistic in TicketsStatistics)
             {
-                @foreach (var statistic in UsersStatistics)
-                {
-                    <tr>
-                        <td>@statistic.UserName</td>
-                        <td>@statistic.TotalTickets</td>
-                        <td>@statistic.TotalWin</td>
-                        <td>@statistic.TotalCost</td>
-                    </tr>
-                }
+                <tr>
+                    <th scope="row">@statistic.LogId</th>
+                    <td>@statistic.UserName</td>
+                    <td>@statistic.Win</td>
+                    <td>@statistic.Cost</td>
+                    <td>@statistic.ProfileBalance</td>
+                    <td>@statistic.Message</td>
+                    <td>@statistic.Exception</td>
+                    <td>@statistic.Date</td>
+                </tr>
             }
         </tbody>
     </table>

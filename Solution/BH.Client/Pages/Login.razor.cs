@@ -15,7 +15,7 @@ namespace BH.Client.Pages
         [Inject]
         private NavigationManager Navigation { get; set; }
 
-        public LoginDto LoginData { get; set; } = new LoginDto();
+        public Common.Dtos.Login LoginData { get; set; } = new Common.Dtos.Login();
 
         protected override void OnInitialized()
         {

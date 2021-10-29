@@ -85,17 +85,29 @@ namespace BH.Domain.Seed
                 new User 
                 { 
                     UserName = "vasya1",
-                    Email = "vasyapupkin@gmail.com"
+                    Email = "vasyapupkin@gmail.com",
+                    Profile = new Profile
+                    {
+                        Balance = 5000
+                    }
                 },
                 new User
                 {
                     UserName = "tolya2",
-                    Email = "tolyapipkin@gmail.com"
+                    Email = "tolyapipkin@gmail.com",
+                    Profile = new Profile
+                    {
+                        Balance = 5000
+                    }
                 },
                 new User
                 {
                     UserName = "fedya3",
-                    Email = "fedyapopkin@gmail.com"
+                    Email = "fedyapopkin@gmail.com",
+                    Profile = new Profile
+                    {
+                        Balance = 5000
+                    }
                 }
             };
         }

@@ -1,6 +1,5 @@
-﻿using BH.Common.Models;
+﻿using BH.Common.Dtos;
 using BH.Domain.Entities;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BH.Domain.Interfaces
@@ -9,10 +8,8 @@ namespace BH.Domain.Interfaces
     {
         Task<int> PlayAsync(string userId, int machineId, int ticketCost);
 
-        Task<List<int>> GetAvailableMachineCosts(int machineId);
-
         Task<Ticket> GetTicketByIdAsync(int ticketId);
 
-        IList<UserStatistic> GetUsersStatistics(int forDays);
+        TicketLogDto GetTicketLog(int ticketId, string userId);
     }
 }

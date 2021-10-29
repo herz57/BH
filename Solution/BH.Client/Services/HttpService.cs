@@ -34,7 +34,7 @@ namespace BH.Client.Services
             _navigation = navigation;
         }
 
-        public async Task<ApiResponse> LoginAsync(LoginDto dto)
+        public async Task<ApiResponse> LoginAsync(Login dto)
         {
             var uri = new Uri($"{_httpClient.BaseAddress}/accounts/login");
             return await PostAsync(uri, dto);
@@ -60,12 +60,12 @@ namespace BH.Client.Services
             return await GetAsync<PlayResponseDto>(uri);
         }
 
-        public async Task<ApiResponse<IList<UserStatistic>>> GetUsersStatisticsAsync(string forDays)
+        public async Task<ApiResponse<IList<UserStatisticDto>>> GetUsersStatisticsAsync(string forDays)
         {
             var uri = new Uri($"{_httpClient.BaseAddress}/tickets/statistics")
                 .AddQuery("forDays", forDays);
 
-            return await GetAsync<IList<UserStatistic>>(uri);
+            return await GetAsync<IList<UserStatisticDto>>(uri);
         }
 
         public async Task<ApiResponse<long>> GetProfileBalanceAsync()

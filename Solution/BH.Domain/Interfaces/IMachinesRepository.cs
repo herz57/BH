@@ -1,4 +1,6 @@
-﻿using BH.Common.Enums;
+﻿using BH.Common.Dtos;
+using BH.Common.Enums;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BH.Domain.Interfaces
@@ -10,5 +12,9 @@ namespace BH.Domain.Interfaces
         Task UnlockMachineAsync(int machineId, string userId);
 
         Task UnlockMachinesAsync();
+
+        Task<List<int>> GetAvailableMachineCosts(int machineId);
+
+        MachinesStateDto GetMachinesState();
     }
 }

@@ -4,13 +4,13 @@ namespace BH.Common.Enums
 {
     public enum DomainType
     {
-        [Description("Star Wars")]
+        [Description("Metal")]
         First = 1,
 
-        [Description("Futurama")]
+        [Description("Star Wars")]
         Second = 2,
 
-        [Description("Naruto")]
+        [Description("Futurama")]
         Third = 3
     }
 }

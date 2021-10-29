@@ -1,12 +1,14 @@
 ﻿using BH.Common.Enums;
 using BH.Domain.Entities;
 using BH.Domain.Interfaces;
-using BH.Domain;
 using BH.Domain.Repositories.Base;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
+using System.Linq;
+using BH.Domain.Extensions;
+using BH.Common.Dtos;
 
 namespace BH.Domain.Repositories
 {
@@ -38,10 +40,7 @@ namespace BH.Domain.Repositories
 
         public async Task UnlockMachineAsync(int machineId, string userId)
         {
-            var query = @"update m set LockedByUserId = null
-                from dbo.Machines m
-                inner join dbo.AspNetUsers u on u.Id = m.LockedByUserId
-                where u.Id = @userId and m.MachineId = @machineId";
+            var query = @"exec UnlockMachine @userId, @machineId";
 
             var parms = new List<SqlParameter>
             {
@@ -54,13 +53,30 @@ namespace BH.Domain.Repositories
 
         public async Task UnlockMachinesAsync()
         {
-            var query = @"update m set LockedByUserId = null
-                from dbo.Machines m
-                inner join dbo.Tickets t on t.MachineId = m.MachineId
-                inner join dbo.TicketHistories th on th.TicketId = t.TicketId
-                where LockedByUserId is not null and th.PlayedOutDate < dateadd(minute, -2, getutcdate())";
-
+            var query = "exec UnlockMachines";
             await Context.Database.ExecuteSqlRawAsync(query);
+        }
+
+        public async Task<List<int>> GetAvailableMachineCosts(int machineId)
+        {
+            var query = @"select t.Cost from dbo.Tickets t
+                where t.MachineId = @machineId
+                group by t.Cost";
+
+            var param = new SqlParameter { ParameterName = "@machineId", Value = machineId };
+            return await Context.Tickets
+                .FromSqlRaw(query, param)
+                .Select(t => t.Cost)
+                .ToListAsync();
+        }
+
+        public MachinesStateDto GetMachinesState()
+        {
+             var result = Context.LoadStoredProc("dbo.GetMachinesState")
+               .ExecuteStoredProc<MachinesStateDto>()
+               .Single();
+
+            return result;
         }
     }
 }

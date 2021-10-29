@@ -1,9 +1,8 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BH.Common.Dtos
 {
-    public class LoginDto
+    public class Login
     {
         [Required]
         public string UserName { get; set; }

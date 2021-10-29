@@ -31,7 +31,7 @@ namespace Infrastructure.Services
             return new LockMachineDto
             {
                 MachineId = machineId,
-                AvailableCosts = await _ticketsRepository.GetAvailableMachineCosts(machineId),
+                AvailableCosts = await _machinesRepository.GetAvailableMachineCosts(machineId),
             };
         }
 
@@ -39,6 +39,11 @@ namespace Infrastructure.Services
         {
             await _machinesRepository.UnlockMachineAsync(machineId, userId);
             _logger.LogInfo($"Machine {machineId} has been unlocked", machineId, nameof(Machine), userId);
+        }
+
+        public MachinesStateDto GetMachinesState()
+        {
+           return _machinesRepository.GetMachinesState();
         }
     }
 }

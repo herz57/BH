@@ -15,6 +15,8 @@ using System;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using BH.Infrastructure.Services;
+using BH.Api.Workers;
+using BH.Infrastructure.Hubs;
 
 namespace BH.Api
 {
@@ -62,6 +64,9 @@ namespace BH.Api
                     });
             });
 
+            services.AddSignalR();
+            services.AddHostedService<StatisticWorker>();
+
             services.AddTransient<ITicketsService, TicketsService>();
             services.AddTransient<IMachinesService, MachinesService>();
             services.AddTransient<IProfilesService, ProfilesService>();
@@ -74,16 +79,6 @@ namespace BH.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-            //else
-            //{
-            //    app.UseMiddleware<ExceptionMiddleware>();
-            //    app.UseHsts();
-            //}
-
             app.UseRouting();
             app.UseCors(MyOrigins);
 
@@ -92,6 +87,7 @@ namespace BH.Api
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<StatisticHub>("statistic-hub");
                 endpoints.MapControllers();
             });
 

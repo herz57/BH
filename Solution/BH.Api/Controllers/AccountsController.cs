@@ -26,7 +26,7 @@ namespace BH.Api.Controllers
         }
 
         [HttpPost("login")]
-        public Task<ApiResponse> Login([FromBody]LoginDto dto)
+        public Task<ApiResponse> Login([FromBody]Login dto)
         {
             return Handle(
                async () =>

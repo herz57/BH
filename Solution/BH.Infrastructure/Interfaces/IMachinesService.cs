@@ -9,5 +9,7 @@ namespace BH.Infrastructure.Interfaces
         Task<LockMachineDto> LockMachineAsync(string userId, DomainType domainType);
 
         Task UnlockMachineAsync(int machineId, string userId);
+
+        MachinesStateDto GetMachinesState();
     }
 }

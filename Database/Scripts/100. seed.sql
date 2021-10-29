@@ -2,8 +2,8 @@ use BH;
 
 -- Domains seed
 insert into [Domains] (DomainType, Description) values 
-	(1, 'Languages'), 
-	(2, 'Metal'), 
+	(1, 'Metal'), 
+	(2, 'Star wars'), 
 	(3, 'Futurama');
 
 -- Mashines seed

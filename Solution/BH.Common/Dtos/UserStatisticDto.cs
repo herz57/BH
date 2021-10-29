@@ -1,6 +1,6 @@
 ﻿namespace BH.Common.Models
 {
-    public class UserStatistic
+    public class UserStatisticDto
     {
         public string UserName { get; set; }
 
@@ -9,6 +9,5 @@
         public long TotalWin { get; set; }
 
         public long TotalCost { get; set; }
-
     }
 }

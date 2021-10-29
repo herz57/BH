@@ -32,7 +32,7 @@ namespace BH.Client.Services
             return new AuthenticationState(_user);
         }
 
-        public async Task SignInAsync(LoginDto dto)
+        public async Task SignInAsync(Login dto)
         {
             var result = await _httpService.LoginAsync(dto);
             if (!result.IsSuccess)

@@ -3,8 +3,9 @@ using BH.Domain.Entities;
 using BH.Domain.Interfaces;
 using BH.Infrastructure.Interfaces;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using BH.Common.Models;
+using BH.Infrastructure.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Services
 {
@@ -12,35 +13,41 @@ namespace Infrastructure.Services
     {
         private readonly ITicketsRepository _ticketRepository;
         private readonly IProfilesRepository _profileRepository;
+        private readonly IHubContext<StatisticHub> _statisticHub;
         private readonly ILoggerService _logger;
 
         public TicketsService(ITicketsRepository ticketRepository,
             IProfilesRepository profileRepository,
+            IHubContext<StatisticHub> statisticHub,
             ILoggerService logger)
         {
             _ticketRepository = ticketRepository;
             _profileRepository = profileRepository;
+            _statisticHub = statisticHub;
             _logger = logger;
         }
 
         public async Task<PlayResponseDto> PlayAsync(User currentUser, int machineId, int ticketCost)
         {
             var ticketId = await _ticketRepository.PlayAsync(currentUser.Id, machineId, ticketCost);
-            var result = await _ticketRepository.GetTicketByIdAsync(ticketId);
-            _logger.LogInfo($"Ticket {result.TicketId} has been played out", result.TicketId, nameof(Ticket), currentUser.Id);
+            var ticket = await _ticketRepository.GetTicketByIdAsync(ticketId);
+            var profileBalance = await _profileRepository.GetBalanceAsync(currentUser.Profile.ProfileId);
+            _logger.LogInfo($"Ticket {ticket.TicketId} has been played out", ticket.TicketId, nameof(Ticket), currentUser.Id);
+            SendTicketLogToSubscribers(ticket.TicketId, currentUser.Id);
 
             return new PlayResponseDto
             {
-                Win = result.Win,
-                ProfileBalance = await _profileRepository.GetBalanceAsync(currentUser.Profile.ProfileId),
-                Symbols = result.Symbols,
+                Win = ticket.Win,
+                ProfileBalance = profileBalance,
+                Symbols = ticket.Symbols,
             };
         }
 
-        public IList<UserStatistic> GetUsersStatistics(int forDays)
+        private void SendTicketLogToSubscribers(int ticketId, string userId)
         {
-            var result = _ticketRepository.GetUsersStatistics(forDays);
-            return result;
+            var ticketLog = _ticketRepository.GetTicketLog(ticketId, userId);
+            var serialized = JsonConvert.SerializeObject(ticketLog);
+            _statisticHub.Clients.All.SendAsync("ticket_log", serialized);
         }
     }
 }

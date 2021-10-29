@@ -1,5 +1,7 @@
-﻿using BH.Domain.Interfaces;
+﻿using BH.Common.Models;
+using BH.Domain.Interfaces;
 using BH.Infrastructure.Interfaces;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BH.Infrastructure.Services
@@ -17,6 +19,12 @@ namespace BH.Infrastructure.Services
         {
             var balance = await _profilesRepository.GetBalanceAsync(profileId);
             return balance;
+        }
+
+        public List<UserStatisticDto> GetUsersStatistics()
+        {
+            var result = _profilesRepository.GetUsersStatistics();
+            return result;
         }
     }
 }

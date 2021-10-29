@@ -6,8 +6,8 @@ using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Linq;
 using BH.Domain.Interfaces;
-using BH.Common.Models;
 using BH.Domain.Extensions;
+using BH.Common.Dtos;
 
 namespace BH.Domain.Repositories
 {
@@ -45,24 +45,13 @@ namespace BH.Domain.Repositories
             return await Context.Tickets.FromSqlRaw(query, param).SingleOrDefaultAsync();
         }
 
-        public async Task<List<int>> GetAvailableMachineCosts(int machineId)
+        public TicketLogDto GetTicketLog(int ticketId, string userId)
         {
-            var query = @"select t.Cost from dbo.Tickets t
-                where t.MachineId = @machineId
-                group by t.Cost";
-
-            var param = new SqlParameter { ParameterName = "@machineId", Value = machineId };
-            return await Context.Tickets
-                .FromSqlRaw(query, param)
-                .Select(t => t.Cost)
-                .ToListAsync();
-        }
-
-        public IList<UserStatistic> GetUsersStatistics(int forDays)
-        {
-            var result = Context.LoadStoredProc("dbo.GetUsersStatistics")
-               .WithSqlParam("forDays", forDays)
-               .ExecuteStoredProc<UserStatistic>();
+            var result = Context.LoadStoredProc("dbo.GetTicketWonLog")
+               .WithSqlParam("ticketId", ticketId)
+               .WithSqlParam("userId", userId)
+               .ExecuteStoredProc<TicketLogDto>()
+               .Single();
 
             return result;
         }

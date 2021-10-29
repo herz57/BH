@@ -1,11 +1,13 @@
 ﻿using BH.Domain.Entities;
 using BH.Domain.Interfaces;
-using BH.Domain;
 using BH.Domain.Repositories.Base;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using BH.Domain.Extensions;
+using BH.Common.Models;
+using System.Collections.Generic;
 
 namespace BH.Domain.Repositories
 {
@@ -20,6 +22,16 @@ namespace BH.Domain.Repositories
                 .FromSqlRaw(query, new SqlParameter("@profileId", profileId))
                 .Select(p => p.Balance)
                 .SingleOrDefaultAsync();
+
+            return result;
+        }
+
+        public List<UserStatisticDto> GetUsersStatistics()
+        {
+            var result = Context.LoadStoredProc("dbo.GetUsersStatistics")
+               .WithSqlParam("forDays", 10000)
+               .ExecuteStoredProc<UserStatisticDto>()
+               .ToList();
 
             return result;
         }

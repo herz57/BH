@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace BH.Client.Pages
 {
-    public partial class Play : IDisposable
+    public partial class Play : ComponentBase, IDisposable
     {
         [Inject]
         private IHttpService HttpService { get; set; }
@@ -46,11 +46,6 @@ namespace BH.Client.Pages
         protected override async Task OnInitializedAsync()
         {
             await InitProfileBalanceAsync();
-        }
-
-        protected override Task OnAfterRenderAsync(bool firstRender)
-        {
-            return base.OnAfterRenderAsync(firstRender);
         }
 
         private async Task InitProfileBalanceAsync()
@@ -100,6 +95,9 @@ namespace BH.Client.Pages
 
         private async Task UnlockMachineAsync()
         {
+            if (selectedMachine == null)
+                return;
+
             isLoading = true;
             await HttpService.UnlockMachineAsync((int)selectedMachine);
             isLoading = false;
@@ -133,9 +131,9 @@ namespace BH.Client.Pages
         {
             return SelectedDomain switch
             {
-                DomainType.First => $"../css/img/star wars/{symbol}.png",
-                DomainType.Second => $"../css/img/futurama/{symbol}.png",
-                DomainType.Third => $"../css/img/naruto/{symbol}.png",
+                DomainType.First => $"../css/img/metal/{symbol}.png",
+                DomainType.Second => $"../css/img/star wars/{symbol}.png",
+                DomainType.Third => $"../css/img/futurama/{symbol}.png",
                 _ => throw new ArgumentException(),
             };
         }

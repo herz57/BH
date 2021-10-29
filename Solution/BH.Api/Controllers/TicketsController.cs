@@ -37,18 +37,5 @@ namespace BH.Api.Controllers
                 nameof(Machine),
                 machineId);
         }
-
-        [Authorize]
-        [HttpGet("statistics")]
-        public Task<ApiResponse> GetUsersStatistics([FromQuery] int forDays = 30)
-        {
-            return Handle(
-                async () =>
-                {
-                    var result = _ticketsService.GetUsersStatistics(forDays);
-                    return result;
-                },
-                nameof(GetUsersStatistics));
-        }
     }
 }
